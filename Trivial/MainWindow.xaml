@@ -18,25 +18,12 @@
             <Setter Property="Margin" Value="5"></Setter>
         </Style>
 
-        <Style TargetType="{x:Type Button}" x:Key="añadirPreguntaEstilo" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="IsEnabled" Value="True"/>
-            <Style.Triggers>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding ElementName=preguntaTextBox, Path=Text}" Value=""></Condition>
-                        <Condition Binding="{Binding ElementName=respuestaTextBox, Path=Text}" Value=""></Condition>
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="IsEnabled" Value="False"/>
-                </MultiDataTrigger>
-            </Style.Triggers>
-        </Style>
     </Window.Resources>
     <Grid>
         <TabControl>
             <TabItem Header="Jugar">
             </TabItem>
             <TabItem Header="Añadir Pregunta">
-
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
@@ -49,11 +36,11 @@
                         <StackPanel>
                             <StackPanel Margin="10">
                                 <TextBlock>Pregunta</TextBlock>
-                                <TextBox x:Name="preguntaTextBox" Text="{Binding Path=NuevaPregunta.Texto, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                <TextBox x:Name="preguntaTextBox" Text="{Binding Path=NuevaPregunta.Texto, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                             </StackPanel>
                             <StackPanel Margin="10">
                                 <TextBlock >Respuesta</TextBlock>
-                                <TextBox x:Name="respuestaTextBox" Text="{Binding Path=NuevaPregunta.Respuesta, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                <TextBox x:Name="respuestaTextBox" Text="{Binding Path=NuevaPregunta.Respuesta, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                             </StackPanel>
                             <StackPanel Margin="10">
                                 <TextBlock>Imagen</TextBlock>
@@ -65,21 +52,21 @@
                                         <ColumnDefinition Width="3*"></ColumnDefinition>
                                         <ColumnDefinition></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="imagenTextBox" Grid.Row="0" Grid.Column="0" VerticalContentAlignment="Center" Text="{Binding Path=NuevaPregunta.Imagen, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                    <TextBox x:Name="imagenTextBox" Grid.Row="0" Grid.Column="0" VerticalContentAlignment="Center" Text="{Binding Path=NuevaPregunta.Imagen, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                                     <Button x:Name="examinarButton" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" Padding="0" Click="examinarButton_Click">Examinar</Button>
                                 </Grid>
                             </StackPanel>
                             <StackPanel Margin="10">
                                 <TextBlock>Dificultad</TextBlock>
-                                <ComboBox  ItemsSource="{Binding Path=Niveles}"></ComboBox>
+                                <ComboBox  ItemsSource="{Binding Path=Niveles}" SelectedItem="{Binding Path=NuevaPregunta.Dificultad, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
                             </StackPanel>
                             <StackPanel Margin="10">
                                 <TextBlock>Categoría</TextBlock>
-                                <ComboBox ItemsSource="{Binding Path=Categorias}"></ComboBox>
+                                <ComboBox ItemsSource="{Binding Path=Categorias}" SelectedItem="{Binding Path=NuevaPregunta.Categoria, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <Button x:Name="añadirPreguntaButton" Click="añadirPreguntaButton_Click" Style="{StaticResource añadirPreguntaEstilo}">Añadir Pregunta</Button>
-                                <Button x:Name="limpiarFormButton">Limpiar Formulario</Button>
+                                <Button x:Name="añadirPreguntaButton">Añadir Pregunta</Button>
+                                <Button x:Name="limpiarFormButton" Click="limpiarFormButton_Click">Limpiar Formulario</Button>
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>

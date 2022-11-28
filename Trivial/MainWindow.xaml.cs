@@ -30,17 +30,14 @@ namespace Trivial
             DataContext = vm;
         }
 
-        private void añadirPreguntaButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image files (*.png;*.jpeg)|*.png;*.jpeg|All files (*.*)|*.*";
-            if (openFileDialog.ShowDialog() == true)
-                imagenTextBox.Text = File.ReadAllText(openFileDialog.FileName);
-        }
-
         private void examinarButton_Click(object sender, RoutedEventArgs e)
         {
+            vm.AñadeImagen();
+        }
 
+        private void limpiarFormButton_Click(object sender, RoutedEventArgs e)
+        {
+            vm.LimpiaFormulario();
         }
     }
 }

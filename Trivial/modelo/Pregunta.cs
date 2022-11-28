@@ -10,7 +10,8 @@ namespace Trivial.modelo
     class Pregunta : ObservableObject
     {
         public Pregunta()
-        { }
+        {
+        }
 
         private string _texto;
         public string Texto
@@ -33,13 +34,20 @@ namespace Trivial.modelo
             set { SetProperty(ref _imagen, value); }
         }
 
-        public enum Dificultades { Facil, Medio, Dificil};
-        public enum Categorias { Disney, Pixar, Villanos, EasterEggs };
+        public enum Dificultades { Facil, Medio, Dificil };
         private Dificultades _dificultad;
         public Dificultades Dificultad
         {
             get { return _dificultad; }
             set { SetProperty(ref _dificultad, value); }
+        }
+
+        public enum Categorias { Disney, Pixar, Villanos, EasterEggs };
+        private Dificultades _categoria;
+        public Dificultades Categoria
+        {
+            get { return _categoria; }
+            set { SetProperty(ref _categoria, value); }
         }
     }
 }
