@@ -14,10 +14,48 @@
             <Setter Property="Margin" Value="10"></Setter>
             <Setter Property="Padding" Value="3"></Setter>
         </Style>
+        <Style TargetType="{x:Type Button}" x:Key="examinarButtonEstilo">
+            <Setter Property="Padding" Value="0"></Setter>
+            <Setter Property="Height" Value="18"/>
+        </Style>
         <Style TargetType="{x:Type GroupBox}">
             <Setter Property="Margin" Value="5"></Setter>
         </Style>
+        <Style TargetType="{x:Type DockPanel}">
+            <Setter Property="Margin" Value="10"></Setter>
+        </Style>
+        <Style TargetType="{x:Type ComboBox}">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="100"/>
+        </Style>
+        <Style TargetType="{x:Type TextBlock}" x:Key="gestionarTextBlockEstilo">
+            <Setter Property="Margin" Value="5"></Setter>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+        </Style>
+        <Style TargetType="{x:Type TextBox}" x:Key="gestionarTextBoxEstilo">
+            <Setter Property="Margin" Value="5"></Setter>
+        </Style>
+        <Style TargetType="{x:Type Expander}" x:Key="editarExpanderEstilo">
+            <Setter Property="Margin" Value="0,5,5,5"/>
+            <Setter Property="IsEnabled" Value="True"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=preguntasListBox, Path=SelectedItem}" Value="{x:Null}">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <!--#region Plantilla Items-->
 
+        <DataTemplate x:Key="plantillaPreguntas">
+            <Border CornerRadius="5" BorderThickness="2">
+                <StackPanel>
+                    <Image />
+                    <TextBlock Text="{Binding Path=Texto}"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <!--#endregion Plantilla Items-->
     </Window.Resources>
     <Grid>
         <TabControl>
@@ -36,11 +74,11 @@
                         <StackPanel>
                             <StackPanel Margin="10">
                                 <TextBlock>Pregunta</TextBlock>
-                                <TextBox x:Name="preguntaTextBox" Text="{Binding Path=NuevaPregunta.Texto, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                <TextBox x:Name="añadirPreguntaTextBox" Text="{Binding Path=NuevaPregunta.Texto, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                             </StackPanel>
                             <StackPanel Margin="10">
                                 <TextBlock >Respuesta</TextBlock>
-                                <TextBox x:Name="respuestaTextBox" Text="{Binding Path=NuevaPregunta.Respuesta, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                <TextBox x:Name="añadirRespuestaTextBox" Text="{Binding Path=NuevaPregunta.Respuesta, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                             </StackPanel>
                             <StackPanel Margin="10">
                                 <TextBlock>Imagen</TextBlock>
@@ -52,20 +90,18 @@
                                         <ColumnDefinition Width="3*"></ColumnDefinition>
                                         <ColumnDefinition></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="imagenTextBox" Grid.Row="0" Grid.Column="0" VerticalContentAlignment="Center" Text="{Binding Path=NuevaPregunta.Imagen, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                                    <Button x:Name="examinarButton" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" Padding="0" Click="examinarButton_Click">Examinar</Button>
+                                    <TextBox x:Name="añadirImagenTextBox" Grid.Row="0" Grid.Column="0" VerticalContentAlignment="Center" Text="{Binding Path=NuevaPregunta.Imagen, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                    <Button x:Name="añadirExaminarButton" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" Style="{StaticResource examinarButtonEstilo}" Click="examinarButton_Click">Examinar</Button>
                                 </Grid>
                             </StackPanel>
-                            <StackPanel Margin="10">
-                                <TextBlock>Dificultad</TextBlock>
-                                <ComboBox  ItemsSource="{Binding Path=Niveles}" SelectedItem="{Binding Path=NuevaPregunta.Dificultad, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
-                            </StackPanel>
-                            <StackPanel Margin="10">
-                                <TextBlock>Categoría</TextBlock>
-                                <ComboBox ItemsSource="{Binding Path=Categorias}" SelectedItem="{Binding Path=NuevaPregunta.Categoria, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
-                            </StackPanel>
+                            <DockPanel LastChildFill="False">
+                                <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center">Dificultad</TextBlock>
+                                <ComboBox  DockPanel.Dock="Left" ItemsSource="{Binding Path=Niveles}" SelectedItem="{Binding Path=NuevaPregunta.Dificultad, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+                                <ComboBox DockPanel.Dock="Right" Margin="5,5,0,5" ItemsSource="{Binding Path=Categorias}" SelectedItem="{Binding Path=NuevaPregunta.Categoria, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+                                <TextBlock VerticalAlignment="Center" DockPanel.Dock="Right" >Categoría</TextBlock>
+                            </DockPanel>
                             <StackPanel Orientation="Horizontal">
-                                <Button x:Name="añadirPreguntaButton">Añadir Pregunta</Button>
+                                <Button x:Name="añadirPreguntaButton" Click="añadirPreguntaButton_Click">Añadir Pregunta</Button>
                                 <Button x:Name="limpiarFormButton" Click="limpiarFormButton_Click">Limpiar Formulario</Button>
                             </StackPanel>
                         </StackPanel>
@@ -82,7 +118,50 @@
 
             </TabItem>
             <TabItem Header="Gestionar Preguntas">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                        <Button Content="Cargar de JSON"/>
+                        <Button Content="Guardar en JSON"/>
+                        <Button Content="Eliminar Pregunta"/>
+                    </StackPanel>
+                    <Expander Header="Editar" DockPanel.Dock="Bottom" Style="{StaticResource editarExpanderEstilo}">
+                        <Grid Visibility="Visible" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="2*"></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource gestionarTextBlockEstilo}">Pregunta</TextBlock>
+                            <TextBox x:Name="preguntaTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding Path=PreguntaSeleccionada.Texto, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource gestionarTextBoxEstilo}"></TextBox>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource gestionarTextBlockEstilo}">Respuesta</TextBlock>
+                            <TextBox x:Name="respuestaTextBox" Grid.Row="1" Grid.Column="1" Text="{Binding Path=PreguntaSeleccionada.Respuesta, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource gestionarTextBoxEstilo}"></TextBox>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource gestionarTextBlockEstilo}">Imágen</TextBlock>
+                            <TextBox x:Name="imagenTextBox" Grid.Row="2" Grid.Column="1" Text="{Binding Path=PreguntaSeleccionada.Imagen, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource gestionarTextBoxEstilo}"></TextBox>
+                            <Button x:Name="examinarButton" Grid.Row="2" Grid.Column="2" Margin="10,0,10,0" Style="{StaticResource examinarButtonEstilo}">Examinar</Button>
+                            <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="False">
+                                <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center">Dificultad</TextBlock>
+                                <ComboBox  DockPanel.Dock="Left" ItemsSource="{Binding Path=Niveles}" SelectedItem="{Binding Path=NuevaPregunta.Dificultad, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+                                <ComboBox DockPanel.Dock="Right" Margin="5,5,0,5" ItemsSource="{Binding Path=Categorias}" SelectedItem="{Binding Path=NuevaPregunta.Categoria, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+                                <TextBlock VerticalAlignment="Center" DockPanel.Dock="Right" >Categoría</TextBlock>
+                            </DockPanel>
 
+                        </Grid>
+                    </Expander>
+
+                    <ListBox x:Name="preguntasListBox" DockPanel.Dock="Top" ItemsSource="{Binding Path=Preguntas}" SelectedItem="{Binding PreguntaSeleccionada}" ItemTemplate="{StaticResource plantillaPreguntas}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel></WrapPanel>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                </DockPanel>
             </TabItem>
         </TabControl>
     </Grid>

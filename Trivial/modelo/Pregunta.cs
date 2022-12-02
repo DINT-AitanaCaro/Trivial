@@ -13,6 +13,15 @@ namespace Trivial.modelo
         {
         }
 
+        public Pregunta(string texto, string respuesta, string imagen, Dificultades dificultad, Categorias categoria)
+        {
+            _texto = texto;
+            _respuesta = respuesta;
+            _imagen = imagen;
+            _dificultad = dificultad;
+            _categoria = categoria;
+        }
+
         private string _texto;
         public string Texto
         {
@@ -43,11 +52,15 @@ namespace Trivial.modelo
         }
 
         public enum Categorias { Disney, Pixar, Villanos, EasterEggs };
-        private Dificultades _categoria;
-        public Dificultades Categoria
+        private Categorias _categoria;
+        public Categorias Categoria
         {
             get { return _categoria; }
             set { SetProperty(ref _categoria, value); }
+        }
+        public override string ToString()
+        {
+            return $"preg: {Texto} \n res: {Respuesta}";
         }
     }
 }

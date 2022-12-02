@@ -39,5 +39,10 @@ namespace Trivial
         {
             vm.LimpiaFormulario();
         }
+
+        private void añadirPreguntaButton_Click(object sender, RoutedEventArgs e)
+        {
+            vm.AñadirPregunta();
+        }
     }
 }
