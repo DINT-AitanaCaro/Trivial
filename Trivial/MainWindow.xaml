@@ -45,16 +45,14 @@
             </Style.Triggers>
         </Style>
         <!--#region Plantilla Items-->
-
         <DataTemplate x:Key="plantillaPreguntas">
-            <Border CornerRadius="5" BorderThickness="2">
-                <StackPanel>
-                    <Image />
-                    <TextBlock Text="{Binding Path=Texto}"/>
-                </StackPanel>
-            </Border>
+            <DockPanel Width="150" Height="150">
+                <Border CornerRadius="5" BorderThickness="2" HorizontalAlignment="Center">
+                    <Image DockPanel.Dock="Top" Width="100" Height="100" Stretch="UniformToFill" Source="{Binding Path=Imagen}"/>
+                </Border>
+                <TextBlock DockPanel.Dock="Bottom" Text="{Binding Path=Texto}"/>
+            </DockPanel>
         </DataTemplate>
-
         <!--#endregion Plantilla Items-->
     </Window.Resources>
     <Grid>

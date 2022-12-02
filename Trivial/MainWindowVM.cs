@@ -50,7 +50,7 @@ namespace Trivial
             _categorias = Enum.GetNames(typeof(Pregunta.Categorias)).ToList();
             NuevaPregunta = new Pregunta();
             _preguntas = new List<Pregunta>();
-            _preguntas.Add(new Pregunta("Hola", "Prueba", AzureService.SubirImagen(@"C:\Users\alumno\Downloads"), Pregunta.Dificultades.Dificil, Pregunta.Categorias.Disney));
+            _preguntas.Add(new Pregunta("Hola", "Prueba", AzureService.SubirImagen(@"C:\Users\alumno\Downloads\imagen.jpg"), Pregunta.Dificultades.Dificil, Pregunta.Categorias.Disney));
         }
 
         internal void AñadirPregunta()
