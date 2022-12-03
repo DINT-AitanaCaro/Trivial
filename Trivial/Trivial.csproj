@@ -198,6 +198,21 @@
   <ItemGroup>
     <Resource Include="assets\image_not_found.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\easy.png" />
+    <Resource Include="assets\hard.png" />
+    <Resource Include="assets\medium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\disney.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\facil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\dificil.png" />
+    <Resource Include="assets\medio.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\CommunityToolkit.Mvvm.8.0.0\build\netstandard2.0\CommunityToolkit.Mvvm.targets" Condition="Exists('..\packages\CommunityToolkit.Mvvm.8.0.0\build\netstandard2.0\CommunityToolkit.Mvvm.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

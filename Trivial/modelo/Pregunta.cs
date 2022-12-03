@@ -43,7 +43,7 @@ namespace Trivial.modelo
             set { SetProperty(ref _imagen, value); }
         }
 
-        public enum Dificultades { Facil, Medio, Dificil };
+        public enum Dificultades { Fácil, Medio, Difícil };
         private Dificultades _dificultad;
         public Dificultades Dificultad
         {

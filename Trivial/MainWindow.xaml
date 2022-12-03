@@ -44,14 +44,36 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="{x:Type Image}" x:Key="iconoDificultad">
+            <Setter Property="Margin" Value="0,5,5,5"/>
+            <Setter Property="IsEnabled" Value="True"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Dificultad}" Value="Fácil">
+                    <Setter Property="Source" Value="assets/facil.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Dificultad}" Value="Medio">
+                    <Setter Property="Source" Value="assets/medio.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Dificultad}" Value="Difícil">
+                    <Setter Property="Source" Value="assets/dificil.png"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
         <!--#region Plantilla Items-->
         <DataTemplate x:Key="plantillaPreguntas">
-            <DockPanel Width="150" Height="150">
-                <Border CornerRadius="5" BorderThickness="2" HorizontalAlignment="Center">
-                    <Image DockPanel.Dock="Top" Width="100" Height="100" Stretch="UniformToFill" Source="{Binding Path=Imagen}"/>
-                </Border>
-                <TextBlock DockPanel.Dock="Bottom" Text="{Binding Path=Texto}"/>
-            </DockPanel>
+            <Border CornerRadius="10" Width="120" Height="180" >
+                <DockPanel Margin="8" LastChildFill="False">
+                    <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="2" CornerRadius="10" Width="90" Height="90">
+                        <Border.Background>
+                            <ImageBrush Stretch="Fill" ImageSource="{Binding Path=Imagen, Mode=OneWay}"/>
+                        </Border.Background>
+                    </Border>
+                    <TextBlock DockPanel.Dock="Top" Margin="10,5,0,0" Foreground="White" Text="{Binding Path=Respuesta}" TextTrimming="WordEllipsis" />
+                    <TextBlock DockPanel.Dock="Top"  Margin="10,0,0,0" Foreground="White" Text="{Binding Path=Texto}" TextTrimming="WordEllipsis"/>
+                    <Image DockPanel.Dock="Left" Margin="10,0,0,0"  Height="25"  Style="{StaticResource iconoDificultad}"/>
+                    <Image DockPanel.Dock="Right" Margin="0,0,10,0"  Height="35" Style="{StaticResource iconoDificultad}"/>
+                </DockPanel>
+            </Border>
         </DataTemplate>
         <!--#endregion Plantilla Items-->
     </Window.Resources>
@@ -152,7 +174,7 @@
                         </Grid>
                     </Expander>
 
-                    <ListBox x:Name="preguntasListBox" DockPanel.Dock="Top" ItemsSource="{Binding Path=Preguntas}" SelectedItem="{Binding PreguntaSeleccionada}" ItemTemplate="{StaticResource plantillaPreguntas}">
+                    <ListBox x:Name="preguntasListBox" DockPanel.Dock="Top" Padding="10" ItemsSource="{Binding Path=Preguntas}" SelectedItem="{Binding PreguntaSeleccionada}" ItemTemplate="{StaticResource plantillaPreguntas}">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel></WrapPanel>
