@@ -52,10 +52,10 @@
                     <Setter Property="Source" Value="assets/facil.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Path=Dificultad}" Value="Medio">
-                    <Setter Property="Source" Value="assets/medio.png"/>
+                    <Setter Property="Source" Value="assets/facil.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Path=Dificultad}" Value="Difícil">
-                    <Setter Property="Source" Value="assets/dificil.png"/>
+                    <Setter Property="Source" Value="assets/facil.png"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
