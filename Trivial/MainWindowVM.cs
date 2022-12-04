@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,30 +38,46 @@ namespace Trivial
             get { return _preguntaSeleccionada; }
             set { SetProperty(ref _preguntaSeleccionada, value); }
         }
-        
+
         private List<Pregunta> _preguntas;
         public List<Pregunta> Preguntas
         {
             get { return _preguntas; }
             set { SetProperty(ref _preguntas, value); }
         }
-        public MainWindowVM()
+
+        public void CargaJson()
         {
-            _dificultades = Enum.GetNames(typeof(Pregunta.Dificultades)).ToList();
-            _categorias = Enum.GetNames(typeof(Pregunta.Categorias)).ToList();
-            NuevaPregunta = new Pregunta();
-            _preguntas = new List<Pregunta>();
-            _preguntas.Add(new Pregunta("En la película Aladdin, ¿cómo se llama el loro?", "Prueba", AzureService.SubirImagen(@"C:\Users\aitan\Downloads\iago.jpg"), Pregunta.Dificultades.Difícil, Pregunta.Categorias.Disney));
+            string preguntasJson = JsonConvert.SerializeObject(Preguntas);
+            preguntasJson = File.ReadAllText("preguntas.json");
+            Preguntas = JsonConvert.DeserializeObject<List<Pregunta>>(preguntasJson);
         }
 
-        internal void AñadirPregunta()
+        internal void EliminarPregunta()
         {
-            if(!string.IsNullOrEmpty(NuevaPregunta.Texto) && !string.IsNullOrEmpty(NuevaPregunta.Respuesta) && !NuevaPregunta.Categoria.Equals(null))
-            {
-                NuevaPregunta.Imagen = AzureService.SubirImagen(NuevaPregunta.Imagen);
-                _preguntas.Add(NuevaPregunta);
-                LimpiaFormulario();
-            }
+            Preguntas.Remove(PreguntaSeleccionada);
+        }
+
+        public void GuardaJson()
+        {
+            string preguntasJson = JsonConvert.SerializeObject(Preguntas);
+            File.WriteAllText("preguntas.json", preguntasJson);
+        }
+
+        public MainWindowVM()
+        {
+            _dificultades = new List<string> { "Fácil", "Media", "Difícil" };
+            _categorias = new List<string> { "Disney", "Pixar", "Marvel", "DC" };
+            NuevaPregunta = new Pregunta();
+            _preguntas = new List<Pregunta>();
+            //_preguntas.Add(new Pregunta("En la película Aladdin, ¿cómo se llama el loro?", "Prueba", AzureService.SubirImagen(@"C:\Users\aitan\Downloads\iago.jpg"), Pregunta.Dificultades.Difícil, Pregunta.Categorias.Disney));
+        }
+
+        public void AñadirPregunta()
+        {
+            NuevaPregunta.Imagen = AzureService.SubirImagen(NuevaPregunta.Imagen);
+            Preguntas.Add(NuevaPregunta);
+            LimpiaFormulario();
         }
 
         public void LimpiaFormulario()
@@ -71,7 +88,7 @@ namespace Trivial
         public void AñadeImagen()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image files (*.png;*.jpeg)|*.png;*.jpeg";
+            openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
                 NuevaPregunta.Imagen = openFileDialog.FileName;
         }

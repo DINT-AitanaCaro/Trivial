@@ -44,5 +44,20 @@ namespace Trivial
         {
             vm.AñadirPregunta();
         }
+
+        private void cargaJSONButton_Click(object sender, RoutedEventArgs e)
+        {
+            vm.CargaJson();
+        }
+
+        private void guardaJSONButton_Click(object sender, RoutedEventArgs e)
+        {
+            vm.GuardaJson();
+        }
+
+        private void eliminarPreguntaButton_Click(object sender, RoutedEventArgs e)
+        {
+            vm.EliminarPregunta();
+        }
     }
 }

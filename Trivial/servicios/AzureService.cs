@@ -19,15 +19,14 @@ namespace Trivial.servicios
             //Obtenemos el cliente del contenedor
             var clienteBlobService = new BlobServiceClient(cadenaConexion);
             var clienteContenedor = clienteBlobService.GetBlobContainerClient(nombreContenedorBlobs);
-            
+
             //Leemos la imagen y la subimos al contenedor
             Stream streamImagen = File.OpenRead(rutaImagen);
             string nombreImagen = Path.GetFileName(rutaImagen);
             try
             {
                 clienteContenedor.UploadBlob(nombreImagen, streamImagen);
-            }
-            catch (Azure.RequestFailedException ex)
+            }catch(Azure.RequestFailedException e)
             {
 
             }
