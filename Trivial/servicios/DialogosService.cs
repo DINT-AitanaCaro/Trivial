@@ -32,5 +32,9 @@ namespace Trivial.servicios
             MessageBox.Show(mensaje, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
+        public static void DialogoInformacion(string mensaje)
+        {
+            MessageBox.Show(mensaje, "Acción realizada", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 }

@@ -83,10 +83,12 @@ namespace Trivial
         {
             string ruta = DialogosService.DialogoGuardarFichero();
             if (!string.IsNullOrEmpty(ruta)) JsonService.GuardaJson(Preguntas, ruta);
+            DialogosService.DialogoInformacion("Fichero JSON guardado correctamente.");
         }
         public void EliminarPregunta()
         {
             Preguntas.Remove(PreguntaSeleccionada);
+            DialogosService.DialogoInformacion("Pregunta eliminada correctamente.");
         }
     }
 }
