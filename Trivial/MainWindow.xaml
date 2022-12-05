@@ -79,7 +79,7 @@
                     <Setter Property="Source" Value="assets/marvel.png"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Path=Categoria}" Value="DC">
-                    <Setter Property="Source" Value="assets/dificil.png"/>
+                    <Setter Property="Source" Value="assets/dc.png"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -217,22 +217,22 @@
                 </DockPanel>
             </TabItem>
             <TabItem Header="prueba">
-                <Border CornerRadius="10" Width="120" Height="180" Background="#825eb6">
-                    <DockPanel Margin="8" LastChildFill="False">
+                    <Border CornerRadius="10" Width="120" Height="180" Background="#825eb6">
+                        <DockPanel Margin="8" LastChildFill="False">
 
-                        <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="2.5" CornerRadius="10" Width="90" Height="90">
-                            <Border.Background >
-                                <ImageBrush  Stretch="UniformToFill"/>
-                            </Border.Background>
-                        </Border>
+                            <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="2.5" CornerRadius="10" Width="90" Height="90">
+                                <Border.Background >
+                                    <ImageBrush  Stretch="UniformToFill"/>
+                                </Border.Background>
+                            </Border>
 
 
-                        <TextBlock DockPanel.Dock="Top"  Margin="10,5,0,0" Foreground="White" Text="Prueba" TextTrimming="WordEllipsis"/>
-                        <TextBlock DockPanel.Dock="Top" Margin="10,5,0,0" Foreground="White" Text="Si" TextTrimming="WordEllipsis" />
-                        <Image DockPanel.Dock="Left" Margin="10,0,0,0"   Width="25" Source="assets/disney.png"/>
-                        <Image DockPanel.Dock="Right" Margin="0,0,10,0"   Width="35" Source="assets/media.png"/>
-                    </DockPanel>
-                </Border>
+                            <TextBlock DockPanel.Dock="Top"  Margin="10,5,0,0" Foreground="White" Text="Prueba" TextTrimming="WordEllipsis"/>
+                            <TextBlock DockPanel.Dock="Top" Margin="10,5,0,0" Foreground="White" Text="Si" TextTrimming="WordEllipsis" />
+                            <Image DockPanel.Dock="Left" Margin="10,0,0,0"   Width="25" Source="assets/disney.png"/>
+                            <Image DockPanel.Dock="Right" Margin="0,0,10,0"   Width="35" Source="assets/media.png"/>
+                        </DockPanel>
+                    </Border>
             </TabItem>
         </TabControl>
     </Grid>
