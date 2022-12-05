@@ -41,7 +41,7 @@ namespace Trivial.modelo
         public string Imagen
         {
             get { return _imagen; }
-            set { SetProperty(ref _imagen, value); }
+            set { SetProperty(ref _imagen, value == null ? "image_not_found.png" : value); }
         }
 
         private string _dificultad;

@@ -59,5 +59,10 @@ namespace Trivial
         {
             vm.EliminarPregunta();
         }
+
+        private void añadirCategoriaButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

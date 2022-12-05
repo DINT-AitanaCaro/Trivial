@@ -75,10 +75,21 @@
                 <DataTrigger Binding="{Binding Path=Categoria}" Value="Pixar">
                     <Setter Property="Source" Value="assets/pixar.png"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding Path=Categoria}" Value="Marvel">
+                    <Setter Property="Source" Value="assets/marvel.png"/>
+                </DataTrigger>
                 <DataTrigger Binding="{Binding Path=Categoria}" Value="DC">
                     <Setter Property="Source" Value="assets/dificil.png"/>
                 </DataTrigger>
             </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type TextBox}" x:Key="añadirImagenPreguntaEstilo">
+            <Setter Property="Text" Value="{Binding Path=NuevaPregunta.Imagen, UpdateSourceTrigger=PropertyChanged}"/>
+            <!--<Style.Triggers>
+                <DataTrigger Binding="{Binding Path=NuevaPregunta.Imagen, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Value="image_not_found.png">
+                    <Setter Property="Text" Value=""/>
+                </DataTrigger>
+            </Style.Triggers>-->
         </Style>
         <!--#region Plantilla Items-->
         <DataTemplate x:Key="plantillaPreguntas">
@@ -91,8 +102,8 @@
                     </Border>
                     <TextBlock DockPanel.Dock="Top"  Margin="10,5,0,0" Foreground="White" Text="{Binding Path=Texto}" TextTrimming="WordEllipsis"/>
                     <TextBlock DockPanel.Dock="Top" Margin="10,5,0,0" Foreground="White" Text="{Binding Path=Respuesta}" TextTrimming="WordEllipsis" />
-                    <Image DockPanel.Dock="Left" Margin="10,0,0,0"   Width="25" Style="{StaticResource iconoCategoria}"/>
-                    <Image DockPanel.Dock="Right" Margin="0,0,10,0"   Width="35" Style="{StaticResource iconoDificultad}"/>
+                    <Image DockPanel.Dock="Left" Margin="10,5,0,0"   Width="25" Style="{StaticResource iconoCategoria}"/>
+                    <Image DockPanel.Dock="Right" Margin="0,5,10,0"   Width="35" Style="{StaticResource iconoDificultad}"/>
                 </DockPanel>
             </Border>
         </DataTemplate>
@@ -131,7 +142,7 @@
                                         <ColumnDefinition Width="3*"></ColumnDefinition>
                                         <ColumnDefinition></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="añadirImagenTextBox" Grid.Row="0" Grid.Column="0" VerticalContentAlignment="Center" Text="{Binding Path=NuevaPregunta.Imagen, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                    <TextBox x:Name="añadirImagenTextBox" Grid.Row="0" Grid.Column="0" VerticalContentAlignment="Center"></TextBox>
                                     <Button x:Name="añadirExaminarButton" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" Style="{StaticResource examinarButtonEstilo}" Click="examinarButton_Click">Examinar</Button>
                                 </Grid>
                             </StackPanel>
@@ -151,6 +162,7 @@
                         <StackPanel>
                             <Image Margin="10" Style="{StaticResource ImagenPreguntaEstilo}"></Image>
                             <TextBlock Text="{Binding Path=NuevaPregunta.Texto}" Margin="10,0,10,0"></TextBlock>
+                            <TextBlock Text="{Binding Path=NuevaPregunta.Respuesta}" Margin="10,0,10,0"></TextBlock>
                         </StackPanel>
                     </GroupBox>
                 </Grid>

@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Trivial.modelo;
@@ -12,14 +13,14 @@ namespace Trivial
 {
     class MainWindowVM : ObservableObject
     {
-        private List<string> _dificultades;
-        public List<string> Niveles
+        private ObservableCollection<string> _dificultades;
+        public ObservableCollection<string> Niveles
         {
             get { return _dificultades; }
             set { SetProperty(ref _dificultades, value); }
         }
-        private List<string> _categorias;
-        public List<string> Categorias
+        private ObservableCollection<string> _categorias;
+        public ObservableCollection<string> Categorias
         {
             get { return _categorias; }
             set { SetProperty(ref _categorias, value); }
@@ -38,8 +39,8 @@ namespace Trivial
             set { SetProperty(ref _preguntaSeleccionada, value); }
         }
 
-        private List<Pregunta> _preguntas;
-        public List<Pregunta> Preguntas
+        private ObservableCollection<Pregunta> _preguntas;
+        public ObservableCollection<Pregunta> Preguntas
         {
             get { return _preguntas; }
             set { SetProperty(ref _preguntas, value); }
@@ -49,11 +50,10 @@ namespace Trivial
 
         public MainWindowVM()
         {
-            Niveles = new List<string> { "Fácil", "Media", "Difícil" };
-            Categorias = new List<string> { "Disney", "Pixar", "Marvel", "DC" };
+            Niveles = new ObservableCollection<string> { "Fácil", "Media", "Difícil" };
+            Categorias = CategoriasService.GetCategorias();
             NuevaPregunta = new Pregunta();
-            Preguntas = new List<Pregunta>();
-            //_preguntas.Add(new Pregunta("En la película Aladdin, ¿cómo se llama el loro?", "Prueba", AzureService.SubirImagen(@"C:\Users\aitan\Downloads\iago.jpg"), Pregunta.Dificultades.Difícil, Pregunta.Categorias.Disney));
+            Preguntas = new ObservableCollection<Pregunta>();
         }
 
         public void AñadirPregunta()
@@ -76,13 +76,13 @@ namespace Trivial
         public void CargaJson()
         {
             string ruta = DialogosService.DialogoAbrirFichero("*.json");
-            if(!String.IsNullOrEmpty(ruta)) Preguntas = JsonService.CargaJson(ruta);
+            if(!string.IsNullOrEmpty(ruta)) Preguntas = JsonService.CargaJson(ruta);
         }
 
         public void GuardaJson()
         {
             string ruta = DialogosService.DialogoGuardarFichero();
-            if (!String.IsNullOrEmpty(ruta)) JsonService.GuardaJson(Preguntas, ruta);
+            if (!string.IsNullOrEmpty(ruta)) JsonService.GuardaJson(Preguntas, ruta);
         }
         public void EliminarPregunta()
         {
