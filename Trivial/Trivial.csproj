@@ -157,7 +157,9 @@
     <Compile Include="modelo\Partida.cs" />
     <Compile Include="modelo\Pregunta.cs" />
     <Compile Include="servicios\AzureService.cs" />
+    <Compile Include="servicios\DialogosService.cs" />
     <Compile Include="servicios\DificultadService.cs" />
+    <Compile Include="servicios\JsonService.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

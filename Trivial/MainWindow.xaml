@@ -24,6 +24,14 @@
         <Style TargetType="{x:Type DockPanel}">
             <Setter Property="Margin" Value="10"></Setter>
         </Style>
+        <Style TargetType="{x:Type Image}" x:Key="ImagenPreguntaEstilo">
+            <Setter Property="Source" Value="{Binding Path=NuevaPregunta.Imagen}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=NuevaPregunta.Imagen}" Value="image_not_found.png">
+                    <Setter Property="Source" Value="assets/image_not_found.png"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
         <Style TargetType="{x:Type ComboBox}">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Width" Value="100"/>
@@ -141,8 +149,8 @@
                     </GroupBox>
                     <GroupBox Grid.Row="0" Grid.Column="1" Header="Vista previa">
                         <StackPanel>
-                            <Image Source="assets/image_not_found.png"  Margin="10"></Image>
-                            <TextBlock Text="{Binding ElementName=preguntaTextBox, Path=Text}" Margin="10,0,10,0"></TextBlock>
+                            <Image Margin="10" Style="{StaticResource ImagenPreguntaEstilo}"></Image>
+                            <TextBlock Text="{Binding Path=NuevaPregunta.Texto}" Margin="10,0,10,0"></TextBlock>
                         </StackPanel>
                     </GroupBox>
                 </Grid>
@@ -202,7 +210,7 @@
 
                         <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="2.5" CornerRadius="10" Width="90" Height="90">
                             <Border.Background >
-                                <ImageBrush  Stretch="UniformToFill" ImageSource="C:\Users\aitan\Pictures\Saved Pictures/fondo-arkane.jpg"/>
+                                <ImageBrush  Stretch="UniformToFill"/>
                             </Border.Background>
                         </Border>
 
