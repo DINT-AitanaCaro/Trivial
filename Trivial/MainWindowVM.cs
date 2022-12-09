@@ -26,6 +26,13 @@ namespace Trivial
             set { SetProperty(ref _categorias, value); }
         }
 
+        private Partida _partida;
+        public Partida Partida
+        {
+            get { return _partida; }
+            set { SetProperty(ref _partida, value); }
+        }
+
         private Pregunta _nuevaPregunta;
         public Pregunta NuevaPregunta
         {
@@ -46,7 +53,26 @@ namespace Trivial
             set { SetProperty(ref _preguntas, value); }
         }
 
+        private Pregunta _preguntaActual;
+        public Pregunta PreguntaActual
+        {
+            get { return _preguntaActual; }
+            set { SetProperty(ref _preguntaActual, value); }
+        }
 
+        private string _categoriaActual;
+        public string Categoria
+        {
+            get { return _categoriaActual; }
+            set { SetProperty(ref _categoriaActual, value); }
+        }
+
+        private string _pista;
+        public string Pista
+        {
+            get { return _pista; }
+            set { SetProperty(ref _pista, value); }
+        }
 
         public MainWindowVM()
         {
@@ -89,6 +115,37 @@ namespace Trivial
         {
             Preguntas.Remove(PreguntaSeleccionada);
             DialogosService.DialogoInformacion("Pregunta eliminada correctamente.");
+        }
+
+        public void NuevaPartida(string dificultad)
+        {
+            Partida = new Partida(dificultad);
+            foreach (string c in Categorias)
+            {
+                List<Pregunta> preguntasValidas = Preguntas.Where(p => p.Categoria == c && p.Dificultad == dificultad).ToList();
+                Random rnd = new Random();
+                int num = rnd.Next(0,preguntasValidas.Count);
+                Partida.Preguntas.Add(preguntasValidas[num]);
+            }
+            PreguntaActual = Partida.Preguntas[0];
+            Categoria = PreguntaActual.Categoria;
+        } 
+
+        public void ValidaRespuesta()
+        {
+            Random rnd = new Random();
+            int num = rnd.Next(0, PreguntaActual.Respuesta.Length);
+            foreach (char c in PreguntaActual.Respuesta)
+            {
+                if(rnd.Next(2) == 1)
+                {
+                    Pista += '*';
+                }
+                else
+                {
+                    Pista += c;
+                }
+            }
         }
     }
 }

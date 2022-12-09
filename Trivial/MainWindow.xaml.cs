@@ -60,7 +60,12 @@ namespace Trivial
             vm.EliminarPregunta();
         }
 
-        private void añadirCategoriaButton_Click(object sender, RoutedEventArgs e)
+        private void nuevaPartidaButton_Click(object sender, RoutedEventArgs e)
+        {
+            vm.NuevaPartida(dificultadPartidaComboBox.SelectedItem.ToString());
+        }
+
+        private void validarButton_Click(object sender, RoutedEventArgs e)
         {
 
         }

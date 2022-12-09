@@ -3,10 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Trivial"
+        xmlns:local="clr-namespace:Trivial" xmlns:local1="clr-namespace:Trivial.Convertidores"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="800" MinHeight="480" MinWidth="800" >
     <Window.Resources>
+        <local1:ColorDificultadConverter x:Key="conversorDificultadColor"/>
+        <local1:PistaConverter x:Key="conversorPista"/>
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="Height" Value="20"></Setter>
         </Style>
@@ -14,7 +16,7 @@
             <Setter Property="Margin" Value="10"></Setter>
             <Setter Property="Padding" Value="3"></Setter>
         </Style>
-        <Style TargetType="{x:Type Button}" x:Key="examinarButtonEstilo">
+        <Style TargetType="{x:Type Button}" x:Key="pequeñoButtonEstilo">
             <Setter Property="Padding" Value="0"></Setter>
             <Setter Property="Height" Value="18"/>
         </Style>
@@ -51,6 +53,18 @@
                     <Setter Property="IsEnabled" Value="False"/>
                 </DataTrigger>
             </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type Expander}" x:Key="pistaExpanderEstilo">
+            <Setter Property="Margin" Value="0,5,0,0"/>
+            <Setter Property="Header" Value="Ver Pista"/>
+            <Style.Triggers>
+                <Trigger Property="IsExpanded" Value="True">
+                    <Setter Property="Header" Value="Ocultar Pista"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type Image}" x:Key="iconosCategoriaStyle">
+            <Setter Property="IsEnabled" Value="False"/>
         </Style>
         <Style TargetType="{x:Type Image}" x:Key="iconoDificultad">
             <Setter Property="Margin" Value="0,5,5,5"/>
@@ -103,7 +117,7 @@
                     <TextBlock DockPanel.Dock="Top"  Margin="10,5,0,0" Foreground="White" Text="{Binding Path=Texto}" TextTrimming="WordEllipsis"/>
                     <TextBlock DockPanel.Dock="Top" Margin="10,5,0,0" Foreground="White" Text="{Binding Path=Respuesta}" TextTrimming="WordEllipsis" />
                     <Image DockPanel.Dock="Left" Margin="10,5,0,0"   Width="25" Style="{StaticResource iconoCategoria}"/>
-                    <Image DockPanel.Dock="Right" Margin="0,5,10,0"   Width="35" Style="{StaticResource iconoDificultad}"/>
+                    <Image DockPanel.Dock="Right" Margin="0,0,10,0"   Width="35" Style="{StaticResource iconoDificultad}"/>
                 </DockPanel>
             </Border>
         </DataTemplate>
@@ -112,6 +126,73 @@
     <Grid>
         <TabControl>
             <TabItem Header="Jugar">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <DockPanel Grid.Row="0" Grid.Column="0" LastChildFill="False">
+                        <DockPanel.Background>
+                            <ImageBrush ImageSource="{Binding Path=PreguntaActual.Imagen}"/>
+                        </DockPanel.Background>
+                        <Border DockPanel.Dock="Top" CornerRadius="15" Margin="5" Background="{Binding Path=PreguntaActual.Dificultad, Converter={StaticResource conversorDificultadColor}}" HorizontalAlignment="Left">
+                            <Image  Margin="10" Style="{StaticResource iconoCategoria}" Width="40"/>
+                        </Border>
+                    </DockPanel>
+                    <Grid Grid.Row="1" Grid.Column="0" Margin="10,5,10,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition ></ColumnDefinition>
+                            <ColumnDefinition Width="3.5 *"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="15" Text="{Binding Path=PreguntaActual.Texto}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+
+                        <TextBlock  Grid.Row="1" Grid.Column="0" FontSize="15"  Text="Respuesta" VerticalAlignment="Center"/>
+                        <TextBox  Grid.Row="1" Grid.Column="1" Margin="0,0,5,0" Height="18"/>
+                        <Button x:Name="validarButton" Grid.Row="1" Grid.Column="2" Content="Validar" Style="{StaticResource pequeñoButtonEstilo}" Click="validarButton_Click"/>
+                        <Expander x:Name="pistaExpander" FontSize="15" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"  Style="{StaticResource pistaExpanderEstilo}" >
+                            <TextBlock FontSize="15" Text="{Binding Path=PreguntaActual.Respuesta, Converter=conversorPista
+                                 }" Margin="30,0,0,0" />
+                        </Expander>
+                    </Grid>
+                    <GroupBox Grid.Row="0" Grid.Column="1" Margin="10" Header="Categorías conseguidas">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition Height="0.5*"></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                                <RowDefinition Height="0.5*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition ></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Row="0" Grid.Column="0"  Source="assets/disney.png" Style="{StaticResource iconosCategoriaStyle}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Disney" HorizontalAlignment="Center" FontSize="17"/>
+                            <Image Grid.Row="0" Grid.Column="1" Source="assets/pixar.png" Style="{StaticResource iconosCategoriaStyle}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Pixar" HorizontalAlignment="Center" FontSize="17"/>
+                            <Image Grid.Row="2" Grid.Column="0" Source="assets/marvel.png" Style="{StaticResource iconosCategoriaStyle}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Marvel" HorizontalAlignment="Center" FontSize="17"/>
+                            <Image Grid.Row="2" Grid.Column="1" Source="assets/dc.png" Style="{StaticResource iconosCategoriaStyle}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="DC" HorizontalAlignment="Center" FontSize="17"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Grid.Column="1" Margin="10" Header="Configuración" Height="70" VerticalAlignment="Top">
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox x:Name="dificultadPartidaComboBox" Width="175" Height="27" ItemsSource="{Binding Path=Niveles}" SelectedItem="{Binding Path=PreguntaActual.Dificultad}"></ComboBox>
+                            <Button x:Name="nuevaPartidaButton" Content="Nueva Partida" Click="nuevaPartidaButton_Click"/>
+                        </StackPanel>
+                    </GroupBox>
+                </Grid>
             </TabItem>
             <TabItem Header="Añadir Pregunta">
                 <Grid>
@@ -143,7 +224,7 @@
                                         <ColumnDefinition></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
                                     <TextBox x:Name="añadirImagenTextBox" Grid.Row="0" Grid.Column="0" VerticalContentAlignment="Center"></TextBox>
-                                    <Button x:Name="añadirExaminarButton" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" Style="{StaticResource examinarButtonEstilo}" Click="examinarButton_Click">Examinar</Button>
+                                    <Button x:Name="añadirExaminarButton" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" Style="{StaticResource pequeñoButtonEstilo}" Click="examinarButton_Click">Examinar</Button>
                                 </Grid>
                             </StackPanel>
                             <DockPanel LastChildFill="False">
@@ -196,7 +277,7 @@
                             <TextBox x:Name="respuestaTextBox" Grid.Row="1" Grid.Column="1" Text="{Binding Path=PreguntaSeleccionada.Respuesta, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource gestionarTextBoxEstilo}"></TextBox>
                             <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource gestionarTextBlockEstilo}">Imágen</TextBlock>
                             <TextBox x:Name="imagenTextBox" Grid.Row="2" Grid.Column="1" Text="{Binding Path=PreguntaSeleccionada.Imagen, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource gestionarTextBoxEstilo}"></TextBox>
-                            <Button x:Name="examinarButton" Grid.Row="2" Grid.Column="2" Margin="10,0,10,0" Style="{StaticResource examinarButtonEstilo}">Examinar</Button>
+                            <Button x:Name="examinarButton" Grid.Row="2" Grid.Column="2" Margin="10,0,10,0" Style="{StaticResource pequeñoButtonEstilo}">Examinar</Button>
                             <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="False">
                                 <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center">Dificultad</TextBlock>
                                 <ComboBox  DockPanel.Dock="Left" ItemsSource="{Binding Path=Niveles}" SelectedItem="{Binding Path=PreguntaSeleccionada.Dificultad, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
@@ -217,22 +298,22 @@
                 </DockPanel>
             </TabItem>
             <TabItem Header="prueba">
-                    <Border CornerRadius="10" Width="120" Height="180" Background="#825eb6">
-                        <DockPanel Margin="8" LastChildFill="False">
+                <Border CornerRadius="10" Width="120" Height="180" Background="#825eb6">
+                    <DockPanel Margin="8" LastChildFill="False">
 
-                            <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="2.5" CornerRadius="10" Width="90" Height="90">
-                                <Border.Background >
-                                    <ImageBrush  Stretch="UniformToFill"/>
-                                </Border.Background>
-                            </Border>
+                        <Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="2.5" CornerRadius="10" Width="90" Height="90">
+                            <Border.Background >
+                                <ImageBrush  Stretch="UniformToFill"/>
+                            </Border.Background>
+                        </Border>
 
 
-                            <TextBlock DockPanel.Dock="Top"  Margin="10,5,0,0" Foreground="White" Text="Prueba" TextTrimming="WordEllipsis"/>
-                            <TextBlock DockPanel.Dock="Top" Margin="10,5,0,0" Foreground="White" Text="Si" TextTrimming="WordEllipsis" />
-                            <Image DockPanel.Dock="Left" Margin="10,0,0,0"   Width="25" Source="assets/disney.png"/>
-                            <Image DockPanel.Dock="Right" Margin="0,0,10,0"   Width="35" Source="assets/media.png"/>
-                        </DockPanel>
-                    </Border>
+                        <TextBlock DockPanel.Dock="Top"  Margin="10,5,0,0" Foreground="White" Text="Prueba" TextTrimming="WordEllipsis"/>
+                        <TextBlock DockPanel.Dock="Top" Margin="10,5,0,0" Foreground="White" Text="Si" TextTrimming="WordEllipsis" />
+                        <Image DockPanel.Dock="Left" Margin="10,0,0,0"   Width="25" Source="assets/disney.png"/>
+                        <Image DockPanel.Dock="Right" Margin="0,0,10,0"   Width="35" Source="assets/media.png"/>
+                    </DockPanel>
+                </Border>
             </TabItem>
         </TabControl>
     </Grid>
