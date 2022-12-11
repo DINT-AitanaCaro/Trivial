@@ -20,7 +20,8 @@ namespace Trivial.servicios
 
         public static ObservableCollection<Pregunta> CargaJson(string ruta)
         {
-            return JsonConvert.DeserializeObject<ObservableCollection<Pregunta>>(File.ReadAllText(ruta));
+            ObservableCollection<Pregunta>  preguntas = JsonConvert.DeserializeObject<ObservableCollection<Pregunta>>(File.ReadAllText(ruta));
+            return preguntas;
         }
     }
 }

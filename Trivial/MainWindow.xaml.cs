@@ -62,12 +62,22 @@ namespace Trivial
 
         private void nuevaPartidaButton_Click(object sender, RoutedEventArgs e)
         {
-            vm.NuevaPartida(dificultadPartidaComboBox.SelectedItem.ToString());
+            string dificultad = (dificultadPartidaComboBox.SelectedItem == null) ? null : dificultadPartidaComboBox.SelectedItem.ToString();
+            vm.NuevaPartida(dificultad);
+
         }
 
         private void validarButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (vm.ValidaRespuesta(respuestaUsuarioTextBox.Text))
+            {
+                respuestaUsuarioTextBox.Text = "";
+                respuestaUsuarioTextBox.BorderBrush = Brushes.Black;
+            }
+            else
+            {
+                respuestaUsuarioTextBox.BorderBrush = Brushes.Red;
+            }
         }
     }
 }

@@ -9,6 +9,7 @@
     <Window.Resources>
         <local1:ColorDificultadConverter x:Key="conversorDificultadColor"/>
         <local1:PistaConverter x:Key="conversorPista"/>
+        <local1:OpacidadCategoriaConverter x:Key="opacidadConverter"/>
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="Height" Value="20"></Setter>
         </Style>
@@ -34,10 +35,34 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+
+        <Style TargetType="{x:Type DockPanel}" x:Key="partidaImageBrushEstilo">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <ImageBrush ImageSource="{Binding Path=PreguntaActual.Imagen}"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=PartidaEnCurso}" Value="False">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <ImageBrush ImageSource="assets/fallback-image.jpg"/>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <Style TargetType="{x:Type ComboBox}">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Width" Value="100"/>
         </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="nombreCategoria">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="17"/>
+        </Style>
+
         <Style TargetType="{x:Type TextBlock}" x:Key="gestionarTextBlockEstilo">
             <Setter Property="Margin" Value="5"></Setter>
             <Setter Property="VerticalAlignment" Value="Bottom"/>
@@ -54,6 +79,14 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="{x:Type TabItem}" x:Key="habilitaTabItemEstilo">
+            <Setter Property="IsEnabled" Value="True"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=PartidaEnCurso}" Value="True">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
         <Style TargetType="{x:Type Expander}" x:Key="pistaExpanderEstilo">
             <Setter Property="Margin" Value="0,5,0,0"/>
             <Setter Property="Header" Value="Ver Pista"/>
@@ -63,9 +96,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style TargetType="{x:Type Image}" x:Key="iconosCategoriaStyle">
-            <Setter Property="IsEnabled" Value="False"/>
-        </Style>
+
         <Style TargetType="{x:Type Image}" x:Key="iconoDificultad">
             <Setter Property="Margin" Value="0,5,5,5"/>
             <Style.Triggers>
@@ -137,7 +168,7 @@
                     </Grid.ColumnDefinitions>
                     <DockPanel Grid.Row="0" Grid.Column="0" LastChildFill="False">
                         <DockPanel.Background>
-                            <ImageBrush ImageSource="{Binding Path=PreguntaActual.Imagen}"/>
+                            <ImageBrush ImageSource="{Binding Path=PreguntaActual.Imagen}" />
                         </DockPanel.Background>
                         <Border DockPanel.Dock="Top" CornerRadius="15" Margin="5" Background="{Binding Path=PreguntaActual.Dificultad, Converter={StaticResource conversorDificultadColor}}" HorizontalAlignment="Left">
                             <Image  Margin="10" Style="{StaticResource iconoCategoria}" Width="40"/>
@@ -155,13 +186,11 @@
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="15" Text="{Binding Path=PreguntaActual.Texto}" VerticalAlignment="Center" TextWrapping="Wrap"/>
-
                         <TextBlock  Grid.Row="1" Grid.Column="0" FontSize="15"  Text="Respuesta" VerticalAlignment="Center"/>
-                        <TextBox  Grid.Row="1" Grid.Column="1" Margin="0,0,5,0" Height="18"/>
+                        <TextBox x:Name="respuestaUsuarioTextBox"  Grid.Row="1" Grid.Column="1" Margin="0,0,5,0" Height="18"/>
                         <Button x:Name="validarButton" Grid.Row="1" Grid.Column="2" Content="Validar" Style="{StaticResource pequeñoButtonEstilo}" Click="validarButton_Click"/>
                         <Expander x:Name="pistaExpander" FontSize="15" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"  Style="{StaticResource pistaExpanderEstilo}" >
-                            <TextBlock FontSize="15" Text="{Binding Path=PreguntaActual.Respuesta, Converter=conversorPista
-                                 }" Margin="30,0,0,0" />
+                            <TextBlock FontSize="15" Text="{Binding Path=PreguntaActual.Respuesta, Converter={StaticResource conversorPista}}" Margin="30,0,0,0" />
                         </Expander>
                     </Grid>
                     <GroupBox Grid.Row="0" Grid.Column="1" Margin="10" Header="Categorías conseguidas">
@@ -176,14 +205,14 @@
                                 <ColumnDefinition ></ColumnDefinition>
                                 <ColumnDefinition></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <Image Grid.Row="0" Grid.Column="0"  Source="assets/disney.png" Style="{StaticResource iconosCategoriaStyle}"/>
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Disney" HorizontalAlignment="Center" FontSize="17"/>
-                            <Image Grid.Row="0" Grid.Column="1" Source="assets/pixar.png" Style="{StaticResource iconosCategoriaStyle}"/>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Pixar" HorizontalAlignment="Center" FontSize="17"/>
-                            <Image Grid.Row="2" Grid.Column="0" Source="assets/marvel.png" Style="{StaticResource iconosCategoriaStyle}"/>
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Marvel" HorizontalAlignment="Center" FontSize="17"/>
-                            <Image Grid.Row="2" Grid.Column="1" Source="assets/dc.png" Style="{StaticResource iconosCategoriaStyle}"/>
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="DC" HorizontalAlignment="Center" FontSize="17"/>
+                            <Image Grid.Row="0" Grid.Column="0"  Source="assets/disney.png" Opacity="{Binding Path=Partida.DisneyAdivinado, Converter={StaticResource opacidadConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Disney" Style="{StaticResource nombreCategoria}"/>
+                            <Image Grid.Row="0" Grid.Column="1" Source="assets/pixar.png" Opacity="{Binding Path=Partida.PixarAdivinado, Converter={StaticResource opacidadConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Pixar" Style="{StaticResource nombreCategoria}"/>
+                            <Image Grid.Row="2" Grid.Column="0" Source="assets/marvel.png" Opacity="{Binding Path=Partida.MarvelAdivinado, Converter={StaticResource opacidadConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Marvel" Style="{StaticResource nombreCategoria}"/>
+                            <Image Grid.Row="2" Grid.Column="1" Source="assets/dc.png" Opacity="{Binding Path=Partida.DcAdivinado, Converter={StaticResource opacidadConverter}, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="DC" Style="{StaticResource nombreCategoria}" />
                         </Grid>
                     </GroupBox>
                     <GroupBox Grid.Row="1" Grid.Column="1" Margin="10" Header="Configuración" Height="70" VerticalAlignment="Top">
@@ -194,7 +223,7 @@
                     </GroupBox>
                 </Grid>
             </TabItem>
-            <TabItem Header="Añadir Pregunta">
+            <TabItem Header="Añadir Pregunta" Style="{StaticResource habilitaTabItemEstilo}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
@@ -251,7 +280,7 @@
 
 
             </TabItem>
-            <TabItem Header="Gestionar Preguntas">
+            <TabItem Header="Gestionar Preguntas" Style="{StaticResource habilitaTabItemEstilo}">
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
                         <Button x:Name="cargaJSONButton" Content="Cargar de JSON" Click="cargaJSONButton_Click"/>
@@ -288,7 +317,7 @@
                         </Grid>
                     </Expander>
 
-                    <ListBox x:Name="preguntasListBox" DockPanel.Dock="Top" Padding="10" ItemsSource="{Binding Path=Preguntas,  UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=PreguntaSeleccionada, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource plantillaPreguntas}">
+                    <ListBox x:Name="preguntasListBox" DockPanel.Dock="Top" Padding="10" ItemsSource="{Binding Path=Preguntas,  UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=PreguntaSeleccionada, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource plantillaPreguntas}"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel></WrapPanel>

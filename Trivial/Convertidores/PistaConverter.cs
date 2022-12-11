@@ -17,14 +17,18 @@ namespace Trivial.Convertidores
             //int num = rnd.Next(0, PreguntaActual.Respuesta.Length);
             foreach (char c in value.ToString())
             {
-                if (rnd.Next(2) == 1)
+                if (c != ' ')
                 {
-                    pista += '*';
+                    if (rnd.Next(2) == 0)
+                    {
+                        pista += '*';
+                    }
+                    else
+                    {
+                        pista += c;
+                    }
                 }
-                else
-                {
-                    pista += c;
-                }
+                else pista += ' ';
             }
             return pista;
         }

@@ -34,5 +34,32 @@ namespace Trivial.modelo
             set { SetProperty(ref _preguntas,value); }
         }
 
+        private bool _disneyAdivinado;
+        public bool DisneyAdivinado
+        {
+            get { return _disneyAdivinado; }
+            set { SetProperty(ref _disneyAdivinado, value); }
+        }
+
+        private bool _pixarAdivinado;
+        public bool PixarAdivinado
+        {
+            get { return _pixarAdivinado; }
+            set { SetProperty(ref _pixarAdivinado, value); }
+        }
+
+        private bool _marvelAdivinado;
+        public bool MarvelAdivinado
+        {
+            get { return _marvelAdivinado; }
+            set { SetProperty(ref _marvelAdivinado, value); }
+        }
+
+        private bool _dcAdivinado;
+        public bool DcAdivinado
+        {
+            get { return _dcAdivinado; }
+            set { SetProperty(ref _dcAdivinado, value); }
+        }
     }
 }

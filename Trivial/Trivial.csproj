@@ -154,6 +154,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Convertidores\ColorDificultadConverter.cs" />
+    <Compile Include="Convertidores\OpacidadCategoriaConverter.cs" />
     <Compile Include="Convertidores\PistaConverter.cs" />
     <Compile Include="MainWindowVM.cs" />
     <Compile Include="modelo\Partida.cs" />
@@ -227,7 +228,9 @@
   <ItemGroup>
     <Resource Include="assets\disney.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="assets\fallback-image.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\CommunityToolkit.Mvvm.8.0.0\build\netstandard2.0\CommunityToolkit.Mvvm.targets" Condition="Exists('..\packages\CommunityToolkit.Mvvm.8.0.0\build\netstandard2.0\CommunityToolkit.Mvvm.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

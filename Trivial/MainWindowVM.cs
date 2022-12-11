@@ -66,12 +66,17 @@ namespace Trivial
             get { return _categoriaActual; }
             set { SetProperty(ref _categoriaActual, value); }
         }
-
         private string _pista;
         public string Pista
         {
             get { return _pista; }
             set { SetProperty(ref _pista, value); }
+        }
+        private bool _partidaEnCurso;
+        public bool PartidaEnCurso
+        {
+            get { return _partidaEnCurso; }
+            set { SetProperty(ref _partidaEnCurso, value); }
         }
 
         public MainWindowVM()
@@ -80,6 +85,7 @@ namespace Trivial
             Categorias = CategoriasService.GetCategorias();
             NuevaPregunta = new Pregunta();
             Preguntas = new ObservableCollection<Pregunta>();
+            PreguntaActual = null;
         }
 
         public void AñadirPregunta()
@@ -102,7 +108,12 @@ namespace Trivial
         public void CargaJson()
         {
             string ruta = DialogosService.DialogoAbrirFichero("*.json");
-            if(!string.IsNullOrEmpty(ruta)) Preguntas = JsonService.CargaJson(ruta);
+            if (!string.IsNullOrEmpty(ruta))
+            {
+                ObservableCollection<Pregunta> preguntas = JsonService.CargaJson(ruta);
+                if (preguntas == null) DialogosService.DialogoError("No se han cargado preguntas.");
+                else Preguntas.Concat(preguntas);
+            }
         }
 
         public void GuardaJson()
@@ -119,33 +130,92 @@ namespace Trivial
 
         public void NuevaPartida(string dificultad)
         {
-            Partida = new Partida(dificultad);
-            foreach (string c in Categorias)
+            if (dificultad != null)
             {
-                List<Pregunta> preguntasValidas = Preguntas.Where(p => p.Categoria == c && p.Dificultad == dificultad).ToList();
-                Random rnd = new Random();
-                int num = rnd.Next(0,preguntasValidas.Count);
-                Partida.Preguntas.Add(preguntasValidas[num]);
-            }
-            PreguntaActual = Partida.Preguntas[0];
-            Categoria = PreguntaActual.Categoria;
-        } 
-
-        public void ValidaRespuesta()
-        {
-            Random rnd = new Random();
-            int num = rnd.Next(0, PreguntaActual.Respuesta.Length);
-            foreach (char c in PreguntaActual.Respuesta)
-            {
-                if(rnd.Next(2) == 1)
+                List<Pregunta> preguntas = new List<Pregunta>();
+                foreach (string c in Categorias)
                 {
-                    Pista += '*';
+                    List<Pregunta> preguntasValidas = Preguntas.Where(p => p.Categoria == c && p.Dificultad == dificultad).ToList();
+                    if (preguntasValidas.Count > 0)
+                    {
+                        Random rnd = new Random();
+                        int num = rnd.Next(0, preguntasValidas.Count);
+                        preguntas.Add(preguntasValidas[num]);
+                    }
                 }
+                if (preguntas.Count == 0) DialogosService.DialogoError("No hay preguntas suficientes para crear una partida.");
                 else
                 {
-                    Pista += c;
+                    Partida = new Partida(dificultad);
+                    Partida.Preguntas = preguntas;
+                    PartidaEnCurso = true;
+                    SiguientePregunta();
                 }
             }
+            else
+            {
+                DialogosService.DialogoError("Selecciona una dificultad.");
+            }
+        }
+
+        public bool ValidaRespuesta(string respuesta)
+        {
+            if (respuesta.ToLower() == PreguntaActual.Respuesta.ToLower())
+            {
+
+                //if(PartidaEnCurso)
+                //{
+                Pregunta acertada = Partida.Preguntas.First(p => p.Respuesta.ToLower() == respuesta.ToLower());
+                MarcaCategoria(acertada.Categoria);
+                Partida.Preguntas.Remove(acertada);
+
+                SiguientePregunta();
+                //}
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void MarcaCategoria(string acertada)
+        {
+            switch (acertada)
+            {
+                case "Disney":
+                    Partida.DisneyAdivinado = true;
+                    break;
+                case "Pixar":
+                    Partida.PixarAdivinado = true;
+                    break;
+                case "Marvel":
+                    Partida.MarvelAdivinado = true;
+                    break;
+                case "DC":
+                    Partida.DcAdivinado = true;
+                    break;
+            }
+        }
+        public void SiguientePregunta()
+        {
+            if (Partida.Preguntas.Count == 0)
+            {
+                EndPartida();
+            }
+            else
+            {
+                PreguntaActual = PreguntaActual == null ? PreguntaActual = Partida.Preguntas[0] : Partida.Preguntas[Partida.Preguntas.IndexOf(PreguntaActual) + 1];
+                Categoria = PreguntaActual.Categoria;
+            }
+        }
+        public void EndPartida()
+        {
+            PartidaEnCurso = false;
+            Partida = null;
+            PreguntaActual = null;
+            Categoria = null;
+            DialogosService.DialogoInformacion("¡Enhorabuena!");
         }
     }
 }
