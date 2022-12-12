@@ -69,15 +69,29 @@ namespace Trivial
 
         private void validarButton_Click(object sender, RoutedEventArgs e)
         {
-            if (vm.ValidaRespuesta(respuestaUsuarioTextBox.Text))
-            {
-                respuestaUsuarioTextBox.Text = "";
-                respuestaUsuarioTextBox.BorderBrush = Brushes.Black;
-            }
-            else
-            {
-                respuestaUsuarioTextBox.BorderBrush = Brushes.Red;
-            }
+            vm.ValidaRespuesta();
+
+        }
+
+        private void limpiarSeleccionPreguntaButton_Click(object sender, RoutedEventArgs e)
+        {
+            vm.LimpiarSeleccion();
+            editarExpander.IsExpanded = false;
+        }
+
+        private void ordenarCategoriaCheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+            vm.OrdenarPorCategoria();
+        }
+
+        private void ordenarCheckbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            vm.PreguntasOrdenAnterior((bool)ordenarCategoriaCheckbox.IsChecked, (bool)ordenarDificultadCheckbox.IsChecked);
+        }
+
+        private void ordenarDificultadCheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+            vm.OrdenarPorDificultad();
         }
     }
 }

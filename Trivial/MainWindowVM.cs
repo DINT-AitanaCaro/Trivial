@@ -46,11 +46,25 @@ namespace Trivial
             set { SetProperty(ref _preguntaSeleccionada, value); }
         }
 
+        private string _respuestaUsuario;
+        public string RespuestaUsuario
+        {
+            get { return _respuestaUsuario; }
+            set { SetProperty(ref _respuestaUsuario, value); }
+        }
+
         private ObservableCollection<Pregunta> _preguntas;
         public ObservableCollection<Pregunta> Preguntas
         {
             get { return _preguntas; }
             set { SetProperty(ref _preguntas, value); }
+        }
+
+        private ObservableCollection<Pregunta> _preguntasOriginal;
+        public ObservableCollection<Pregunta> PreguntasOriginal
+        {
+            get { return _preguntasOriginal; }
+            set { SetProperty(ref _preguntasOriginal, value); }
         }
 
         private Pregunta _preguntaActual;
@@ -85,16 +99,33 @@ namespace Trivial
             Categorias = CategoriasService.GetCategorias();
             NuevaPregunta = new Pregunta();
             Preguntas = new ObservableCollection<Pregunta>();
+            PreguntasOriginal = new ObservableCollection<Pregunta>();
             PreguntaActual = null;
         }
 
         public void AñadirPregunta()
         {
-            NuevaPregunta.Imagen = AzureService.SubirImagen(NuevaPregunta.Imagen);
-            Preguntas.Add(NuevaPregunta);
-            LimpiaFormulario();
+            if (ValidaFormulario())
+            {
+                NuevaPregunta.Imagen = AzureService.SubirImagen(NuevaPregunta.Imagen);
+                Preguntas.Add(NuevaPregunta);
+                PreguntasOriginal = Preguntas;
+                LimpiaFormulario();
+            } else
+            {
+                DialogosService.DialogoError("Rellena todos los campos.");
+            }
         }
-
+        public bool ValidaFormulario()
+        {
+            if(string.IsNullOrEmpty(NuevaPregunta.Texto) || string.IsNullOrEmpty(NuevaPregunta.Respuesta) || string.IsNullOrEmpty(NuevaPregunta.Imagen) || string.IsNullOrEmpty(NuevaPregunta.Categoria) || string.IsNullOrEmpty(NuevaPregunta.Dificultad))
+            {
+                return false;
+            } else
+            {
+                return true;
+            }
+        }
         public void LimpiaFormulario()
         {
             NuevaPregunta = new Pregunta();
@@ -112,7 +143,11 @@ namespace Trivial
             {
                 ObservableCollection<Pregunta> preguntas = JsonService.CargaJson(ruta);
                 if (preguntas == null) DialogosService.DialogoError("No se han cargado preguntas.");
-                else Preguntas.Concat(preguntas);
+                else
+                {
+                    Preguntas = preguntas;
+                    PreguntasOriginal = Preguntas;
+                }
             }
         }
 
@@ -157,25 +192,34 @@ namespace Trivial
                 DialogosService.DialogoError("Selecciona una dificultad.");
             }
         }
-
-        public bool ValidaRespuesta(string respuesta)
+        public string LimpiaAcentos(string cadena)
         {
-            if (respuesta.ToLower() == PreguntaActual.Respuesta.ToLower())
+            cadena = cadena.ToLower();
+            if (cadena.Contains("á")) cadena = cadena.Replace("á", "a");
+            if (cadena.Contains("é")) cadena = cadena.Replace("é", "e");
+            if (cadena.Contains("í")) cadena = cadena.Replace("í", "i");
+            if (cadena.Contains("ó")) cadena = cadena.Replace("ó", "o");
+            if (cadena.Contains("ú")) cadena = cadena.Replace("ú", "u");
+            return cadena;
+        }
+        public void ValidaRespuesta()
+        {
+            if (!string.IsNullOrEmpty(RespuestaUsuario))
             {
-
-                //if(PartidaEnCurso)
-                //{
-                Pregunta acertada = Partida.Preguntas.First(p => p.Respuesta.ToLower() == respuesta.ToLower());
-                MarcaCategoria(acertada.Categoria);
-                Partida.Preguntas.Remove(acertada);
-
-                SiguientePregunta();
-                //}
-                return true;
+                string respuesta = LimpiaAcentos(RespuestaUsuario);
+                string respuestaCorrecta = LimpiaAcentos(PreguntaActual.Respuesta);
+                if (respuesta == respuestaCorrecta)
+                {
+                    Pregunta acertada = Partida.Preguntas.First(p => LimpiaAcentos(p.Respuesta) == respuesta);
+                    MarcaCategoria(acertada.Categoria);
+                    Partida.Preguntas.Remove(acertada);
+                    RespuestaUsuario = null;
+                    SiguientePregunta();
+                }
             }
             else
             {
-                return false;
+                DialogosService.DialogoError("Introduce una respuesta.");
             }
         }
 
@@ -217,5 +261,34 @@ namespace Trivial
             Categoria = null;
             DialogosService.DialogoInformacion("¡Enhorabuena!");
         }
+
+        public void OrdenarPorCategoria()
+        {
+            Preguntas = new ObservableCollection<Pregunta>(Preguntas.OrderBy(p => p.Categoria));
+        }
+
+        public void OrdenarPorDificultad()
+        {
+            Preguntas = new ObservableCollection<Pregunta>(Preguntas.OrderBy(p => p.Dificultad.StartsWith("F") ? 1 : 0).ThenBy(p => p.Dificultad));
+
+        }
+        public void PreguntasOrdenAnterior(bool categorias, bool dificultades)
+        {
+            Preguntas = PreguntasOriginal;
+            if (categorias)
+            {
+                OrdenarPorCategoria();
+            }
+            else if (dificultades)
+            {
+                OrdenarPorDificultad();
+            }
+        }
+
+        public void LimpiarSeleccion()
+        {
+            PreguntaSeleccionada = null;
+        }
+
     }
 }

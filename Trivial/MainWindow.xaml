@@ -5,24 +5,48 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Trivial" xmlns:local1="clr-namespace:Trivial.Convertidores"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800" MinHeight="480" MinWidth="800" >
+        Title="MainWindow" Height="500" Width="950" MinHeight="600" MinWidth="900" Background="Indigo">
     <Window.Resources>
         <local1:ColorDificultadConverter x:Key="conversorDificultadColor"/>
         <local1:PistaConverter x:Key="conversorPista"/>
         <local1:OpacidadCategoriaConverter x:Key="opacidadConverter"/>
-        <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Height" Value="20"></Setter>
+        <Style TargetType="{x:Type TextBlock}" x:Key="añadirPreguntasTextBlockEstilo">
+            <Setter Property="Margin" Value="5,0,0,0"></Setter>
         </Style>
+
+        <Style TargetType="{x:Type GroupBox}" x:Key="gestionarPreguntasGroupBoxEstilo">
+            <Setter Property="Margin" Value="0,5,0,0"></Setter>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template" Value="{DynamicResource GroupBoxControlTemplate}"/>
+        </Style>
+        <Style TargetType="{x:Type GroupBox}" x:Key="añadirPreguntasGroupBoxEstilo" BasedOn="{StaticResource gestionarPreguntasGroupBoxEstilo}">
+            <Setter Property="Margin" Value="10"></Setter>
+        </Style>
+        <Style TargetType="{x:Type Image}" x:Key="jugarCategoriasImagenEstilo">
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+        <Style TargetType="{x:Type CheckBox}" x:Key="ordenarPreguntasCheckboxEstilo">
+            <Setter Property="Margin" Value="3"></Setter>
+            <Setter Property="Template" Value="{DynamicResource CheckBoxControlTemplate}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <EventSetter Event="Unchecked" Handler="ordenarCheckbox_Unchecked"/>
+        </Style>
+
         <Style TargetType="{x:Type Button}">
             <Setter Property="Margin" Value="10"></Setter>
             <Setter Property="Padding" Value="3"></Setter>
-        </Style>
+        </Style> 
         <Style TargetType="{x:Type Button}" x:Key="pequeñoButtonEstilo">
-            <Setter Property="Padding" Value="0"></Setter>
-            <Setter Property="Height" Value="18"/>
+            <Setter Property="Height" Value="22"/>
+            <Setter Property="Width" Value="90"/>
         </Style>
-        <Style TargetType="{x:Type GroupBox}">
-            <Setter Property="Margin" Value="5"></Setter>
+        <Style TargetType="{x:Type Button}" x:Key="validarButtonEstilo" BasedOn="{StaticResource pequeñoButtonEstilo}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=trivialTabControl, Path=SelectedItem.Header}" Value="Jugar">
+                    <Setter Property="IsDefault" Value="True"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
         <Style TargetType="{x:Type DockPanel}">
             <Setter Property="Margin" Value="10"></Setter>
@@ -36,23 +60,27 @@
             </Style.Triggers>
         </Style>
 
-        <Style TargetType="{x:Type DockPanel}" x:Key="partidaImageBrushEstilo">
-            <Setter Property="Background">
-                <Setter.Value>
-                    <ImageBrush ImageSource="{Binding Path=PreguntaActual.Imagen}"/>
-                </Setter.Value>
-            </Setter>
+        <Style TargetType="{x:Type Image}" x:Key="partidaImageEstilo">
+            <Setter Property="Source" Value="assets/fallback-image.jpg"/>
             <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=PartidaEnCurso}" Value="True">
+                    <Setter Property="Source" Value="{Binding Path=PreguntaActual.Imagen}"/>
+                </DataTrigger>
                 <DataTrigger Binding="{Binding Path=PartidaEnCurso}" Value="False">
-                    <Setter Property="Background">
-                        <Setter.Value>
-                            <ImageBrush ImageSource="assets/fallback-image.jpg"/>
-                        </Setter.Value>
-                    </Setter>
+                    <Setter Property="Source" Value="assets/fallback-image.jpg"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
 
+        <Style TargetType="{x:Type TextBox}" x:Key="partidaRespuestaTextBoxEstilo" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Margin" Value="10,0,5,0"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=PartidaEnCurso}" Value="True">
+                    <Setter Property="IsReadOnly" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
         <Style TargetType="{x:Type ComboBox}">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Width" Value="100"/>
@@ -60,17 +88,56 @@
 
         <Style TargetType="{x:Type TextBlock}" x:Key="nombreCategoria">
             <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,2,0,20"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="disneyAdivinadoTextBlockEstilo" BasedOn="{StaticResource nombreCategoria}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Partida.DisneyAdivinado}" Value="True">
+                    <Setter Property="Foreground" Value="Lime"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style TargetType="{x:Type TextBlock}" x:Key="pixarAdivinadoTextBlockEstilo" BasedOn="{StaticResource nombreCategoria}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Partida.PixarAdivinado}" Value="True">
+                    <Setter Property="Foreground" Value="Lime"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="marvelAdivinadoTextBlockEstilo" BasedOn="{StaticResource nombreCategoria}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Partida.MarvelAdivinado}" Value="True">
+                    <Setter Property="Foreground" Value="Lime"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="dcAdivinadoTextBlockEstilo" BasedOn="{StaticResource nombreCategoria}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=Partida.DcAdivinado}" Value="True">
+                    <Setter Property="Foreground" Value="Lime"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="White"/>
         </Style>
 
         <Style TargetType="{x:Type TextBlock}" x:Key="gestionarTextBlockEstilo">
             <Setter Property="Margin" Value="5"></Setter>
             <Setter Property="VerticalAlignment" Value="Bottom"/>
         </Style>
-        <Style TargetType="{x:Type TextBox}" x:Key="gestionarTextBoxEstilo">
+        <Style TargetType="{x:Type TextBox}" >
             <Setter Property="Margin" Value="5"></Setter>
+            <Setter Property="Padding" Value="2"/>
         </Style>
-        <Style TargetType="{x:Type Expander}" x:Key="editarExpanderEstilo">
+        <Style TargetType="{x:Type Expander}" x:Key="editarExpanderEstilo" BasedOn="{StaticResource {x:Type Expander}}">
             <Setter Property="Margin" Value="0,5,5,5"/>
             <Setter Property="IsEnabled" Value="True"></Setter>
             <Style.Triggers>
@@ -78,6 +145,9 @@
                     <Setter Property="IsEnabled" Value="False"/>
                 </DataTrigger>
             </Style.Triggers>
+        </Style>
+        <Style TargetType="{x:Type Expander}">
+            <Setter Property="Foreground" Value="White"/>
         </Style>
         <Style TargetType="{x:Type TabItem}" x:Key="habilitaTabItemEstilo">
             <Setter Property="IsEnabled" Value="True"></Setter>
@@ -87,8 +157,8 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style TargetType="{x:Type Expander}" x:Key="pistaExpanderEstilo">
-            <Setter Property="Margin" Value="0,5,0,0"/>
+        <Style TargetType="{x:Type Expander}" x:Key="pistaExpanderEstilo" BasedOn="{StaticResource {x:Type Expander}}">
+            <Setter Property="Margin" Value="10"/>
             <Setter Property="Header" Value="Ver Pista"/>
             <Style.Triggers>
                 <Trigger Property="IsExpanded" Value="True">
@@ -152,10 +222,102 @@
                 </DockPanel>
             </Border>
         </DataTemplate>
+        <ControlTemplate x:Key="GroupBoxControlTemplate" TargetType="{x:Type GroupBox}">
+            <Grid SnapsToDevicePixels="True">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="6"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="6"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="6"/>
+                </Grid.RowDefinitions>
+                <Border BorderBrush="Transparent" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.ColumnSpan="4" Grid.Column="0" CornerRadius="4" Grid.Row="1" Grid.RowSpan="3"/>
+                <Border BorderBrush="LightCyan" BorderThickness="2" Grid.ColumnSpan="4" CornerRadius="4" Grid.Row="1" Grid.RowSpan="3">
+                    <Border.OpacityMask>
+                        <MultiBinding ConverterParameter="7" UpdateSourceTrigger="Default">
+                            <MultiBinding.Converter>
+                                <BorderGapMaskConverter/>
+                            </MultiBinding.Converter>
+                            <Binding ElementName="Header" Path="ActualWidth"/>
+                            <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}"/>
+                            <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}"/>
+                        </MultiBinding>
+                    </Border.OpacityMask>
+                </Border>
+                <Border x:Name="Header" Grid.Column="1" Padding="3,1,3,0" Grid.Row="0" Grid.RowSpan="2">
+                    <ContentPresenter ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentSource="Header" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                </Border>
+                <ContentPresenter Grid.ColumnSpan="2" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="1" ContentStringFormat="{TemplateBinding ContentStringFormat}" Margin="{TemplateBinding Padding}" Grid.Row="2" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="CheckBoxControlTemplate" TargetType="{x:Type CheckBox}">
+            <Grid x:Name="templateRoot" Background="Transparent" SnapsToDevicePixels="True">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border x:Name="checkBoxBorder" CornerRadius="3" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                    <Grid x:Name="markGrid">
+                        <Path x:Name="optionMark" Data="F1M9.97498,1.22334L4.6983,9.09834 4.52164,9.09834 0,5.19331 1.27664,3.52165 4.255,6.08833 8.33331,1.52588E-05 9.97498,1.22334z" Fill="#FF212121" Margin="1" Opacity="0" Stretch="None"/>
+                        <Rectangle x:Name="indeterminateMark" Fill="#FF212121" Margin="2" Opacity="0"/>
+                    </Grid>
+                </Border>
+                <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="1" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="HasContent" Value="True">
+                    <Setter Property="FocusVisualStyle">
+                        <Setter.Value>
+                            <Style>
+                                <Setter Property="Control.Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Rectangle Margin="14,0,0,0" SnapsToDevicePixels="True" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Padding" Value="4,-1,0,0"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" TargetName="checkBoxBorder" Value="#FFF3F9FF"/>
+                    <Setter Property="BorderBrush" TargetName="checkBoxBorder" Value="#FF5593FF"/>
+                    <Setter Property="Fill" TargetName="optionMark" Value="#FF212121"/>
+                    <Setter Property="Fill" TargetName="indeterminateMark" Value="#FF212121"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" TargetName="checkBoxBorder" Value="#FFE6E6E6"/>
+                    <Setter Property="BorderBrush" TargetName="checkBoxBorder" Value="#FFBCBCBC"/>
+                    <Setter Property="Fill" TargetName="optionMark" Value="#FF707070"/>
+                    <Setter Property="Fill" TargetName="indeterminateMark" Value="#FF707070"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" TargetName="checkBoxBorder" Value="#FFD9ECFF"/>
+                    <Setter Property="BorderBrush" TargetName="checkBoxBorder" Value="#FF3C77DD"/>
+                    <Setter Property="Fill" TargetName="optionMark" Value="#FF212121"/>
+                    <Setter Property="Fill" TargetName="indeterminateMark" Value="#FF212121"/>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Opacity" TargetName="optionMark" Value="1"/>
+                    <Setter Property="Opacity" TargetName="indeterminateMark" Value="0"/>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="{x:Null}">
+                    <Setter Property="Opacity" TargetName="optionMark" Value="0"/>
+                    <Setter Property="Opacity" TargetName="indeterminateMark" Value="1"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
         <!--#endregion Plantilla Items-->
     </Window.Resources>
     <Grid>
-        <TabControl>
+        <TabControl x:Name="trivialTabControl" Background="Indigo">
             <TabItem Header="Jugar">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -163,64 +325,62 @@
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.5*"></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition MaxWidth="380"/>
                     </Grid.ColumnDefinitions>
-                    <DockPanel Grid.Row="0" Grid.Column="0" LastChildFill="False">
-                        <DockPanel.Background>
-                            <ImageBrush ImageSource="{Binding Path=PreguntaActual.Imagen}" />
-                        </DockPanel.Background>
-                        <Border DockPanel.Dock="Top" CornerRadius="15" Margin="5" Background="{Binding Path=PreguntaActual.Dificultad, Converter={StaticResource conversorDificultadColor}}" HorizontalAlignment="Left">
-                            <Image  Margin="10" Style="{StaticResource iconoCategoria}" Width="40"/>
-                        </Border>
-                    </DockPanel>
-                    <Grid Grid.Row="1" Grid.Column="0" Margin="10,5,10,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition ></ColumnDefinition>
-                            <ColumnDefinition Width="3.5 *"></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="15" Text="{Binding Path=PreguntaActual.Texto}" VerticalAlignment="Center" TextWrapping="Wrap"/>
-                        <TextBlock  Grid.Row="1" Grid.Column="0" FontSize="15"  Text="Respuesta" VerticalAlignment="Center"/>
-                        <TextBox x:Name="respuestaUsuarioTextBox"  Grid.Row="1" Grid.Column="1" Margin="0,0,5,0" Height="18"/>
-                        <Button x:Name="validarButton" Grid.Row="1" Grid.Column="2" Content="Validar" Style="{StaticResource pequeñoButtonEstilo}" Click="validarButton_Click"/>
-                        <Expander x:Name="pistaExpander" FontSize="15" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"  Style="{StaticResource pistaExpanderEstilo}" >
-                            <TextBlock FontSize="15" Text="{Binding Path=PreguntaActual.Respuesta, Converter={StaticResource conversorPista}}" Margin="30,0,0,0" />
-                        </Expander>
-                    </Grid>
-                    <GroupBox Grid.Row="0" Grid.Column="1" Margin="10" Header="Categorías conseguidas">
-                        <Grid>
+                    <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" Source="{Binding Path=PreguntaActual.Imagen}"  Stretch="Fill" Margin="10" Style="{StaticResource partidaImageEstilo}"/>
+                    <Border Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" CornerRadius="15" Margin="20" Background="{Binding Path=PreguntaActual.Dificultad, Converter={StaticResource conversorDificultadColor}}" HorizontalAlignment="Left">
+                        <Image  Margin="10" Style="{StaticResource iconoCategoria}" Width="40"/>
+                    </Border>
+                    <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,5,10,0">
+                        <TextBlock DockPanel.Dock="Top" FontSize="18" Text="{Binding Path=PreguntaActual.Texto}" VerticalAlignment="Center" TextWrapping="Wrap" Margin="10"/>
+                        <TextBlock DockPanel.Dock="Top" FontSize="18"  Text="Respuesta" VerticalAlignment="Center" Margin="10,10,10,2"/>
+                        <Grid DockPanel.Dock="Top">
                             <Grid.RowDefinitions>
                                 <RowDefinition></RowDefinition>
-                                <RowDefinition Height="0.5*"></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                                <RowDefinition Height="0.5*"></RowDefinition>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition ></ColumnDefinition>
+                                <ColumnDefinition Width="2*"></ColumnDefinition>
                                 <ColumnDefinition></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <Image Grid.Row="0" Grid.Column="0"  Source="assets/disney.png" Opacity="{Binding Path=Partida.DisneyAdivinado, Converter={StaticResource opacidadConverter}, UpdateSourceTrigger=PropertyChanged}"/>
-                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Disney" Style="{StaticResource nombreCategoria}"/>
-                            <Image Grid.Row="0" Grid.Column="1" Source="assets/pixar.png" Opacity="{Binding Path=Partida.PixarAdivinado, Converter={StaticResource opacidadConverter}, UpdateSourceTrigger=PropertyChanged}"/>
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Pixar" Style="{StaticResource nombreCategoria}"/>
-                            <Image Grid.Row="2" Grid.Column="0" Source="assets/marvel.png" Opacity="{Binding Path=Partida.MarvelAdivinado, Converter={StaticResource opacidadConverter}, UpdateSourceTrigger=PropertyChanged}"/>
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Marvel" Style="{StaticResource nombreCategoria}"/>
-                            <Image Grid.Row="2" Grid.Column="1" Source="assets/dc.png" Opacity="{Binding Path=Partida.DcAdivinado, Converter={StaticResource opacidadConverter}, UpdateSourceTrigger=PropertyChanged}"/>
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="DC" Style="{StaticResource nombreCategoria}" />
+                            <TextBox x:Name="respuestaUsuarioTextBox" Grid.Row="0" Grid.Column="0" Text="{Binding Path=RespuestaUsuario, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource partidaRespuestaTextBoxEstilo}"/>
+                            <Button x:Name="validarButton" Grid.Row="0" Grid.Column="1" Content="Validar" HorizontalAlignment="Left" Style="{StaticResource validarButtonEstilo}" Click="validarButton_Click" VerticalAlignment="Top"/>
                         </Grid>
-                    </GroupBox>
-                    <GroupBox Grid.Row="1" Grid.Column="1" Margin="10" Header="Configuración" Height="70" VerticalAlignment="Top">
-                        <StackPanel Orientation="Horizontal">
-                            <ComboBox x:Name="dificultadPartidaComboBox" Width="175" Height="27" ItemsSource="{Binding Path=Niveles}" SelectedItem="{Binding Path=PreguntaActual.Dificultad}"></ComboBox>
-                            <Button x:Name="nuevaPartidaButton" Content="Nueva Partida" Click="nuevaPartidaButton_Click"/>
-                        </StackPanel>
-                    </GroupBox>
+                        <Expander x:Name="pistaExpander" FontSize="18" Style="{StaticResource pistaExpanderEstilo}" >
+                            <TextBlock FontSize="15" Text="{Binding Path=PreguntaActual.Respuesta, Converter={StaticResource conversorPista}}" Margin="30,0,0,0" />
+                        </Expander>
+                    </DockPanel>
+                    <StackPanel  Grid.Row="0" Grid.Column="2" Grid.RowSpan="2">
+                        <GroupBox Padding="5" Margin="10" Header="Categorías conseguidas" Style="{StaticResource gestionarPreguntasGroupBoxEstilo}" MaxHeight="400" >
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition Height="0.5*"></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition Height="0.5*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition ></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Row="0" Grid.Column="0"  Source="assets/disney.png" Opacity="{Binding Path=Partida.DisneyAdivinado, Converter={StaticResource opacidadConverter}, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource jugarCategoriasImagenEstilo}"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Disney" Style="{StaticResource disneyAdivinadoTextBlockEstilo}"/>
+                                <Image Grid.Row="0" Grid.Column="1" Source="assets/pixar.png" Opacity="{Binding Path=Partida.PixarAdivinado, Converter={StaticResource opacidadConverter}, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource jugarCategoriasImagenEstilo}"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Text="Pixar" Style="{StaticResource pixarAdivinadoTextBlockEstilo}"/>
+                                <Image Grid.Row="2" Grid.Column="0" Source="assets/marvel.png" Opacity="{Binding Path=Partida.MarvelAdivinado, Converter={StaticResource opacidadConverter}, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource jugarCategoriasImagenEstilo}"/>
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Marvel" Style="{StaticResource marvelAdivinadoTextBlockEstilo}"/>
+                                <Image Grid.Row="2" Grid.Column="1" Source="assets/dc.png" Opacity="{Binding Path=Partida.DcAdivinado, Converter={StaticResource opacidadConverter}, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource jugarCategoriasImagenEstilo}"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1" Text="DC" Style="{StaticResource dcAdivinadoTextBlockEstilo}"/>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox MaxHeight="300" Margin="10,10,10,0" Header="Configuración" Style="{StaticResource gestionarPreguntasGroupBoxEstilo}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <ComboBox x:Name="dificultadPartidaComboBox"  Height="27" ItemsSource="{Binding Path=Niveles}" SelectedItem="{Binding Path=PreguntaActual.Dificultad}"></ComboBox>
+                                <Button x:Name="nuevaPartidaButton" Content="Nueva Partida" Padding="5" Click="nuevaPartidaButton_Click"/>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
                 </Grid>
             </TabItem>
             <TabItem Header="Añadir Pregunta" Style="{StaticResource habilitaTabItemEstilo}">
@@ -232,18 +392,18 @@
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <GroupBox Grid.Row="0" Grid.Column="0" Header="Información">
+                    <GroupBox Grid.Row="0" Grid.Column="0" Header="Información" Style="{StaticResource añadirPreguntasGroupBoxEstilo}">
                         <StackPanel>
                             <StackPanel Margin="10">
-                                <TextBlock>Pregunta</TextBlock>
+                                <TextBlock Style="{StaticResource añadirPreguntasTextBlockEstilo}">Pregunta</TextBlock>
                                 <TextBox x:Name="añadirPreguntaTextBox" Text="{Binding Path=NuevaPregunta.Texto, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                             </StackPanel>
                             <StackPanel Margin="10">
-                                <TextBlock >Respuesta</TextBlock>
+                                <TextBlock Style="{StaticResource añadirPreguntasTextBlockEstilo}">Respuesta</TextBlock>
                                 <TextBox x:Name="añadirRespuestaTextBox" Text="{Binding Path=NuevaPregunta.Respuesta, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                             </StackPanel>
                             <StackPanel Margin="10">
-                                <TextBlock>Imagen</TextBlock>
+                                <TextBlock Style="{StaticResource añadirPreguntasTextBlockEstilo}">Imagen</TextBlock>
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition></RowDefinition>
@@ -252,15 +412,15 @@
                                         <ColumnDefinition Width="3*"></ColumnDefinition>
                                         <ColumnDefinition></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
-                                    <TextBox x:Name="añadirImagenTextBox" Grid.Row="0" Grid.Column="0" VerticalContentAlignment="Center"></TextBox>
+                                    <TextBox x:Name="añadirImagenTextBox" Grid.Row="0" Grid.Column="0" Text="{Binding Path=NuevaPregunta.Imagen, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" IsReadOnly="True"></TextBox>
                                     <Button x:Name="añadirExaminarButton" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" Style="{StaticResource pequeñoButtonEstilo}" Click="examinarButton_Click">Examinar</Button>
                                 </Grid>
                             </StackPanel>
                             <DockPanel LastChildFill="False">
-                                <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center">Dificultad</TextBlock>
+                                <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" Style="{StaticResource añadirPreguntasTextBlockEstilo}">Dificultad</TextBlock>
                                 <ComboBox x:Name="combo" DockPanel.Dock="Left" ItemsSource="{Binding Path=Niveles}" SelectedItem="{Binding Path=NuevaPregunta.Dificultad, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
-                                <ComboBox DockPanel.Dock="Right" Margin="5,5,0,5" ItemsSource="{Binding Path=Categorias}" SelectedItem="{Binding Path=NuevaPregunta.Categoria, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
-                                <TextBlock VerticalAlignment="Center" DockPanel.Dock="Right" >Categoría</TextBlock>
+                                <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" Margin="20,0,0,0">Categoría</TextBlock>
+                                <ComboBox DockPanel.Dock="Left" Margin="5,5,0,5" ItemsSource="{Binding Path=Categorias}" SelectedItem="{Binding Path=NuevaPregunta.Categoria, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
                             </DockPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Button x:Name="añadirPreguntaButton" Click="añadirPreguntaButton_Click">Añadir Pregunta</Button>
@@ -268,11 +428,11 @@
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>
-                    <GroupBox Grid.Row="0" Grid.Column="1" Header="Vista previa">
+                    <GroupBox Grid.Row="0" Grid.Column="1" Header="Vista previa" Style="{StaticResource añadirPreguntasGroupBoxEstilo}">
                         <StackPanel>
                             <Image Margin="10" Style="{StaticResource ImagenPreguntaEstilo}"></Image>
-                            <TextBlock Text="{Binding Path=NuevaPregunta.Texto}" Margin="10,0,10,0"></TextBlock>
-                            <TextBlock Text="{Binding Path=NuevaPregunta.Respuesta}" Margin="10,0,10,0"></TextBlock>
+                            <TextBlock Text="{Binding Path=NuevaPregunta.Texto}" Margin="15,0,10,0" FontSize="18" FontWeight="SemiBold"></TextBlock>
+                            <TextBlock Text="{Binding Path=NuevaPregunta.Respuesta}" Margin="15,0,10,0" FontSize="17"></TextBlock>
                         </StackPanel>
                     </GroupBox>
                 </Grid>
@@ -280,14 +440,9 @@
 
 
             </TabItem>
-            <TabItem Header="Gestionar Preguntas" Style="{StaticResource habilitaTabItemEstilo}">
-                <DockPanel>
-                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
-                        <Button x:Name="cargaJSONButton" Content="Cargar de JSON" Click="cargaJSONButton_Click"/>
-                        <Button  x:Name="guardaJSONButton"  Content="Guardar en JSON" Click="guardaJSONButton_Click"/>
-                        <Button x:Name="eliminarPreguntaButton" Content="Eliminar Pregunta" Click="eliminarPreguntaButton_Click"/>
-                    </StackPanel>
-                    <Expander Header="Editar" DockPanel.Dock="Bottom" Style="{StaticResource editarExpanderEstilo}">
+            <TabItem Header="Gestionar Preguntas" Style="{StaticResource habilitaTabItemEstilo}" >
+                <DockPanel Background="Indigo">
+                    <Expander x:Name="editarExpander" Header="Editar" DockPanel.Dock="Bottom" Style="{StaticResource editarExpanderEstilo}">
                         <Grid Visibility="Visible" >
                             <Grid.RowDefinitions>
                                 <RowDefinition></RowDefinition>
@@ -301,12 +456,12 @@
                                 <ColumnDefinition></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource gestionarTextBlockEstilo}">Pregunta</TextBlock>
-                            <TextBox x:Name="preguntaTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding Path=PreguntaSeleccionada.Texto, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource gestionarTextBoxEstilo}"></TextBox>
+                            <TextBox x:Name="preguntaTextBox" Grid.Row="0" Grid.Column="1" Text="{Binding Path=PreguntaSeleccionada.Texto, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                             <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource gestionarTextBlockEstilo}">Respuesta</TextBlock>
-                            <TextBox x:Name="respuestaTextBox" Grid.Row="1" Grid.Column="1" Text="{Binding Path=PreguntaSeleccionada.Respuesta, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource gestionarTextBoxEstilo}"></TextBox>
+                            <TextBox x:Name="respuestaTextBox" Grid.Row="1" Grid.Column="1" Text="{Binding Path=PreguntaSeleccionada.Respuesta, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
                             <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource gestionarTextBlockEstilo}">Imágen</TextBlock>
-                            <TextBox x:Name="imagenTextBox" Grid.Row="2" Grid.Column="1" Text="{Binding Path=PreguntaSeleccionada.Imagen, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource gestionarTextBoxEstilo}"></TextBox>
-                            <Button x:Name="examinarButton" Grid.Row="2" Grid.Column="2" Margin="10,0,10,0" Style="{StaticResource pequeñoButtonEstilo}">Examinar</Button>
+                            <TextBox x:Name="imagenTextBox" Grid.Row="2" Grid.Column="1" IsReadOnly="True" Text="{Binding Path=PreguntaSeleccionada.Imagen, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+                            <Button x:Name="examinarButton" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" Margin="10,0,10,0" Style="{StaticResource pequeñoButtonEstilo}">Examinar</Button>
                             <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="False">
                                 <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center">Dificultad</TextBlock>
                                 <ComboBox  DockPanel.Dock="Left" ItemsSource="{Binding Path=Niveles}" SelectedItem="{Binding Path=PreguntaSeleccionada.Dificultad, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
@@ -316,8 +471,27 @@
 
                         </Grid>
                     </Expander>
-
-                    <ListBox x:Name="preguntasListBox" DockPanel.Dock="Top" Padding="10" ItemsSource="{Binding Path=Preguntas,  UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=PreguntaSeleccionada, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource plantillaPreguntas}"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <StackPanel DockPanel.Dock="Right" Width="140" Margin="10,0,0,0" >
+                        <GroupBox Header="Ordenar" Margin="0" Style="{StaticResource gestionarPreguntasGroupBoxEstilo}">
+                            <StackPanel >
+                                <CheckBox x:Name="ordenarCategoriaCheckbox" Content="Por categoría" Checked="ordenarCategoriaCheckbox_Checked" Style="{StaticResource ordenarPreguntasCheckboxEstilo}"/>
+                                <CheckBox x:Name="ordenarDificultadCheckbox" Content="Por dificultad" Checked="ordenarDificultadCheckbox_Checked" Style="{StaticResource ordenarPreguntasCheckboxEstilo}"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Ficheros" Style="{StaticResource gestionarPreguntasGroupBoxEstilo}">
+                            <StackPanel>
+                                <Button x:Name="cargaJSONButton" Content="Cargar de JSON" Click="cargaJSONButton_Click"/>
+                                <Button  x:Name="guardaJSONButton"  Content="Guardar en JSON" Click="guardaJSONButton_Click"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Otros" Style="{StaticResource gestionarPreguntasGroupBoxEstilo}">
+                            <StackPanel>
+                                <Button x:Name="eliminarPreguntaButton" Content="Eliminar Pregunta" Click="eliminarPreguntaButton_Click"/>
+                                <Button x:Name="limpiarSeleccionPreguntaButton" Content="Limpiar Selección" Click="limpiarSeleccionPreguntaButton_Click"/>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                    <ListBox x:Name="preguntasListBox" DockPanel.Dock="Top" Padding="10" ItemsSource="{Binding Path=Preguntas,  UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=PreguntaSeleccionada, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource plantillaPreguntas}"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="Lavender">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel></WrapPanel>

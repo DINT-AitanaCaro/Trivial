@@ -21,7 +21,12 @@ namespace Trivial.servicios
             var clienteContenedor = clienteBlobService.GetBlobContainerClient(nombreContenedorBlobs);
 
             //Leemos la imagen y la subimos al contenedor
-            Stream streamImagen = File.OpenRead(rutaImagen);
+            Stream streamImagen;
+            try
+            {
+                streamImagen = File.OpenRead(rutaImagen);
+            }
+            catch (FileNotFoundException) { streamImagen = File.OpenRead("assets/image_not_found.png");  }
             string nombreImagen = Path.GetFileName(rutaImagen);
             try
             {
