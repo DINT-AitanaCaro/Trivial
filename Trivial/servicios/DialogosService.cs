@@ -32,9 +32,9 @@ namespace Trivial.servicios
             MessageBox.Show(mensaje, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public static void DialogoInformacion(string mensaje)
+        public static void DialogoInformacion(string mensaje, string cabecera)
         {
-            MessageBox.Show(mensaje, "Acción realizada", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(mensaje, cabecera, MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

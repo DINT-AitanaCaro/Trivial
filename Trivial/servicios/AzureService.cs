@@ -31,7 +31,7 @@ namespace Trivial.servicios
             try
             {
                 clienteContenedor.UploadBlob(nombreImagen, streamImagen);
-            }catch(Azure.RequestFailedException e)
+            }catch(Azure.RequestFailedException )
             {
 
             }

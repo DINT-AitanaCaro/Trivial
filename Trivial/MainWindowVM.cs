@@ -155,12 +155,12 @@ namespace Trivial
         {
             string ruta = DialogosService.DialogoGuardarFichero();
             if (!string.IsNullOrEmpty(ruta)) JsonService.GuardaJson(Preguntas, ruta);
-            DialogosService.DialogoInformacion("Fichero JSON guardado correctamente.");
+            DialogosService.DialogoInformacion("Fichero JSON guardado correctamente.", "JSON Lectura");
         }
         public void EliminarPregunta()
         {
             Preguntas.Remove(PreguntaSeleccionada);
-            DialogosService.DialogoInformacion("Pregunta eliminada correctamente.");
+            DialogosService.DialogoInformacion("Pregunta eliminada correctamente.", "Eliminación");
         }
 
         public void NuevaPartida(string dificultad)
@@ -259,7 +259,7 @@ namespace Trivial
             Partida = null;
             PreguntaActual = null;
             Categoria = null;
-            DialogosService.DialogoInformacion("¡Enhorabuena!");
+            DialogosService.DialogoInformacion("¡Enhorabuena!", "Partida Ganada");
         }
 
         public void OrdenarPorCategoria()
