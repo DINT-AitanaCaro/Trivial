@@ -26,7 +26,11 @@ namespace Trivial.servicios
             {
                 streamImagen = File.OpenRead(rutaImagen);
             }
-            catch (FileNotFoundException) { streamImagen = File.OpenRead("assets/image_not_found.png");  }
+            catch (FileNotFoundException) { }
+            finally
+            {
+                streamImagen = File.OpenRead(Directory.GetCurrentDirectory() + "/../../assets/image_not_found.png");
+            }
             string nombreImagen = Path.GetFileName(rutaImagen);
             try
             {

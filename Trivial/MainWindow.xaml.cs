@@ -93,5 +93,15 @@ namespace Trivial
         {
             vm.OrdenarPorDificultad();
         }
+
+        private void siguientePreguntaButton_Click(object sender, RoutedEventArgs e)
+        {
+            vm.SiguientePregunta();
+        }
+
+        private void anteriorPreguntaButton_Click(object sender, RoutedEventArgs e)
+        {
+            vm.AnteriorPregunta();
+        }
     }
 }

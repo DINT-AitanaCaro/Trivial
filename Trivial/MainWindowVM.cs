@@ -111,17 +111,19 @@ namespace Trivial
                 Preguntas.Add(NuevaPregunta);
                 PreguntasOriginal = Preguntas;
                 LimpiaFormulario();
-            } else
+            }
+            else
             {
                 DialogosService.DialogoError("Rellena todos los campos.");
             }
         }
         public bool ValidaFormulario()
         {
-            if(string.IsNullOrEmpty(NuevaPregunta.Texto) || string.IsNullOrEmpty(NuevaPregunta.Respuesta) || string.IsNullOrEmpty(NuevaPregunta.Imagen) || string.IsNullOrEmpty(NuevaPregunta.Categoria) || string.IsNullOrEmpty(NuevaPregunta.Dificultad))
+            if (string.IsNullOrEmpty(NuevaPregunta.Texto) || string.IsNullOrEmpty(NuevaPregunta.Respuesta) || string.IsNullOrEmpty(NuevaPregunta.Imagen) || string.IsNullOrEmpty(NuevaPregunta.Categoria) || string.IsNullOrEmpty(NuevaPregunta.Dificultad))
             {
                 return false;
-            } else
+            }
+            else
             {
                 return true;
             }
@@ -249,9 +251,17 @@ namespace Trivial
             }
             else
             {
-                PreguntaActual = PreguntaActual == null ? PreguntaActual = Partida.Preguntas[0] : Partida.Preguntas[Partida.Preguntas.IndexOf(PreguntaActual) + 1];
-                Categoria = PreguntaActual.Categoria;
+                int index = Partida.Preguntas.IndexOf(PreguntaActual);
+                PreguntaActual = PreguntaActual == null ? Partida.Preguntas[0] : index + 1 > Partida.Preguntas.Count - 1 ? Partida.Preguntas[0] : Partida.Preguntas[index + 1];
+                //Categoria = PreguntaActual.Categoria;
             }
+        }
+
+        public void AnteriorPregunta()
+        {
+            int index = Partida.Preguntas.IndexOf(PreguntaActual);
+            PreguntaActual = index == 0 ? Partida.Preguntas[Partida.Preguntas.Count-1] : Partida.Preguntas[index - 1];
+            //Categoria = PreguntaActual.Categoria;
         }
         public void EndPartida()
         {

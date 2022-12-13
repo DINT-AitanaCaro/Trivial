@@ -11,7 +11,7 @@ namespace Trivial.modelo
     {
         public Pregunta()
         {
-            Imagen = "image_not_found.png";
+            Imagen = "assets/image_not_found.png";
         }
 
         public Pregunta(string texto, string respuesta, string imagen, string dificultad, string categoria)

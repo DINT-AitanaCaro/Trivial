@@ -12,23 +12,31 @@ namespace Trivial.Convertidores
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            string respuesta = value.ToString();
             string pista = "";
             Random rnd = new Random();
-            //int num = rnd.Next(0, PreguntaActual.Respuesta.Length);
-            foreach (char c in value.ToString())
+            int numCodificado = respuesta.Length / 2;
+            if (value.ToString().Length > 1)
             {
-                if (c != ' ')
+                for (int i = 0; i < respuesta.Length; i++)
                 {
-                    if (rnd.Next(2) == 0)
+                    if (respuesta[i] != ' ')
                     {
-                        pista += '*';
+                        if ((rnd.Next(2) == 1 && numCodificado > 0) || (respuesta.Length - i - 1 < numCodificado))
+                        {
+                            pista += '*';
+                            numCodificado--;
+                        }
+                        else
+                        {
+                            pista += respuesta[i];
+                        }
                     }
-                    else
-                    {
-                        pista += c;
-                    }
+                    else pista += ' ';
                 }
-                else pista += ' ';
+            } else
+            {
+                pista = "*";
             }
             return pista;
         }
