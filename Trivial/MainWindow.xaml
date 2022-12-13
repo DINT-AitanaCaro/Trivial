@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Trivial" xmlns:local1="clr-namespace:Trivial.Convertidores"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="950" MinHeight="680" MinWidth="900" Background="Indigo">
+        Icon="assets/icon.ico
+        "
+        Title="FicTrivial" Height="500" Width="950" MinHeight="680" MinWidth="900" Background="Indigo">
     <Window.Resources>
         <local1:ColorDificultadConverter x:Key="conversorDificultadColor"/>
         <local1:PistaConverter x:Key="conversorPista"/>
