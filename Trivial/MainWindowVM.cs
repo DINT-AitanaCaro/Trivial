@@ -119,12 +119,13 @@ namespace Trivial
         }
         public bool ValidaFormulario()
         {
-            if (string.IsNullOrEmpty(NuevaPregunta.Texto) || string.IsNullOrEmpty(NuevaPregunta.Respuesta) || string.IsNullOrEmpty(NuevaPregunta.Imagen) || string.IsNullOrEmpty(NuevaPregunta.Categoria) || string.IsNullOrEmpty(NuevaPregunta.Dificultad))
+            if (string.IsNullOrEmpty(NuevaPregunta.Texto) || string.IsNullOrEmpty(NuevaPregunta.Respuesta) || string.IsNullOrEmpty(NuevaPregunta.Categoria) || string.IsNullOrEmpty(NuevaPregunta.Dificultad))
             {
                 return false;
             }
             else
             {
+                if (string.IsNullOrEmpty(NuevaPregunta.Imagen)) NuevaPregunta.Imagen = "assets/image_not_found.png";
                 return true;
             }
         }
@@ -156,8 +157,11 @@ namespace Trivial
         public void GuardaJson()
         {
             string ruta = DialogosService.DialogoGuardarFichero();
-            if (!string.IsNullOrEmpty(ruta)) JsonService.GuardaJson(Preguntas, ruta);
-            DialogosService.DialogoInformacion("Fichero JSON guardado correctamente.", "JSON Lectura");
+            if (!string.IsNullOrEmpty(ruta))
+            {
+                JsonService.GuardaJson(Preguntas, ruta);
+                DialogosService.DialogoInformacion("Fichero JSON guardado correctamente.", "JSON Lectura");
+            }
         }
         public void EliminarPregunta()
         {
@@ -180,7 +184,7 @@ namespace Trivial
                         preguntas.Add(preguntasValidas[num]);
                     }
                 }
-                if (preguntas.Count == 0) DialogosService.DialogoError("No hay preguntas suficientes para crear una partida.");
+                if (preguntas.Count < 4) DialogosService.DialogoError("No hay preguntas suficientes para crear una partida.");
                 else
                 {
                     Partida = new Partida(dificultad);

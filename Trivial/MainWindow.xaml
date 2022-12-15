@@ -176,6 +176,11 @@
         </Style>
         <Style TargetType="{x:Type Image}" x:Key="ImagenPreguntaEstilo">
             <Setter Property="Source" Value="{Binding Path=NuevaPregunta.Imagen}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=NuevaPregunta.Imagen}" Value="{x:Null}">
+                    <Setter Property="Source" Value="assets/image_not_found.png"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
 
         <Style TargetType="{x:Type Image}" x:Key="partidaImageEstilo">

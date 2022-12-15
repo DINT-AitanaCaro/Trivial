@@ -11,7 +11,6 @@ namespace Trivial.modelo
     {
         public Pregunta()
         {
-            Imagen = "assets/image_not_found.png";
         }
 
         public Pregunta(string texto, string respuesta, string imagen, string dificultad, string categoria)
@@ -41,7 +40,7 @@ namespace Trivial.modelo
         public string Imagen
         {
             get { return _imagen; }
-            set { SetProperty(ref _imagen, value == null ? "image_not_found.png" : value); }
+            set { SetProperty(ref _imagen, value); }
         }
 
         private string _dificultad;
